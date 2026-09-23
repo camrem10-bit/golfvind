@@ -1,4 +1,4 @@
-const CACHE="golf-shot-calculator-v2";
+const CACHE="golf-shot-calculator-v4";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./icon-180.png","./icon-192.png","./icon-512.png"];
 
 self.addEventListener("install",event=>{
@@ -14,9 +14,18 @@ self.addEventListener("activate",event=>{
 });
 
 self.addEventListener("fetch",event=>{
+  const url=new URL(event.request.url);
+  if(url.hostname.includes("open-meteo.com")){
+    event.respondWith(fetch(event.request));
+    return;
+  }
   event.respondWith(
-    caches.match(event.request).then(cached=>
-      cached || fetch(event.request).catch(()=>caches.match("./index.html"))
-    )
+    fetch(event.request)
+      .then(response=>{
+        const copy=response.clone();
+        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
+        return response;
+      })
+      .catch(()=>caches.match(event.request).then(c=>c||caches.match("./index.html")))
   );
 });
