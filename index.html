@@ -11,7 +11,7 @@
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Golf Shot Calculator</title>
   <style>
-    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#707970;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
+    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",sans-serif;font-weight:500;color:#1a271e;background:#707970;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;background:#707970;padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
     main{max-width:560px;margin:auto}
@@ -21,12 +21,12 @@
     .top-grid .card{margin:0;min-width:0;padding:9px}
     .section-title{font-size:16px;font-weight:800;margin-bottom:3px}
     label{display:block;font-size:11px;font-weight:700;margin:9px 0 5px}
-    input[type=number]{width:100%;font-size:16px;padding:9px 10px;border:1px solid #ccd9ce;border-radius:11px;background:#fff;min-width:0}
+    input[type=number]{width:100%;font-family:inherit;font-weight:500;font-size:16px;padding:9px 10px;border:1px solid #ccd9ce;border-radius:11px;background:#fff;min-width:0}
     #dist{color:#a32635;font-size:19px;font-weight:700}
     input[type=range]{width:100%;accent-color:var(--green);min-width:0}
     .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
     .seg button,.btn,.small-btn{border:1px solid #ccd9ce;background:#fff;border-radius:7px;padding:7px 4px;font-size:11px;font-weight:700;color:#26342c;min-width:0;touch-action:manipulation}
-    button{cursor:pointer;font-family:inherit}
+    button{cursor:pointer;font-family:inherit;font-weight:inherit}
     .seg button.active,.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
     .between{display:flex;align-items:center;justify-content:space-between;gap:8px}
     .muted{color:var(--muted);font-size:11px;line-height:1.35}
@@ -41,6 +41,7 @@
     .pill{border:1px solid #cbd5cf;background:#fff;border-radius:9px;padding:7px 2px;text-align:center;font-size:12px;font-weight:700;white-space:nowrap}
     .status-card{background:#eff9f1;border:1px solid #d2e7d6;border-radius:11px;padding:9px;margin-top:10px}
     .status-card strong{font-size:14px}.wind-big{font-size:22px;font-weight:800;margin:7px 0}
+    .wind-source-arrow{width:28px;height:28px;flex:none;margin:0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--green);font-size:18px;font-weight:700;line-height:1}
     .dial-wrap{display:flex;justify-content:center;padding:6px 0}
     .dial{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%);border:1px solid #d3dcd6;touch-action:none;user-select:none}
     .dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:800}
@@ -95,7 +96,7 @@
       <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
       <div id="autoWind">
         <div class="status-card">
-          <div class="between"><strong>Current location</strong><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
+          <div class="between"><strong>Current location</strong><span id="windSourceArrow" class="wind-source-arrow hidden" role="img" aria-label="Wind direction not loaded" title="Direction wind comes from">↑</span><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
           <div class="muted" id="locationText">Location unavailable</div>
           <div class="muted" id="locationAccuracy"></div>
           <div class="wind-big" id="weatherWind">—</div>
@@ -169,6 +170,11 @@
       terrain, buildings and gusts. Headwind has a greater effect than tailwind, crosswind mainly
       affects direction. Club estimates assume a straight shot.
     </p>
+    <div class="between" style="margin-top:12px">
+      <span class="muted">Version 5.9</span>
+      <button class="small-btn" id="updateBtn" type="button">Check for updates</button>
+    </div>
+    <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
   </section>
 
   <footer class="creator-footer">Created by Camilla Remstedt, 2026</footer>
@@ -429,6 +435,7 @@ async function requestLocationAndWeather(){
 
   $("locationText").textContent="Requesting location…";
   $("locationAccuracy").textContent="";
+  $("windSourceArrow").classList.add("hidden");
   weather=null; calc();
 
   navigator.geolocation.getCurrentPosition(async pos=>{
@@ -442,6 +449,7 @@ async function requestLocationAndWeather(){
     if(requestId!==locationRequestId) return;
     $("locationText").textContent="Location unavailable";
     $("locationAccuracy").textContent="";
+    $("windSourceArrow").classList.add("hidden");
     $("weatherWind").textContent="—"; calc();
     $("windError").textContent="Allow location access in Safari/iPhone settings, then try again.";
   },{
@@ -471,6 +479,7 @@ async function lookupPlace(position,requestId){
 async function fetchWeather(){
   if(!gps) return;
   $("weatherWind").textContent="Loading wind…";
+  $("windSourceArrow").classList.add("hidden");
   $("windError").textContent="";
 
   try{
@@ -487,11 +496,21 @@ async function fetchWeather(){
     };
 
     $("weatherWind").textContent=`${degToCardinal(weather.fromDeg)} ${weather.speed.toFixed(1)} m/s`;
-    $("weatherDir").textContent=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°) • ${String(weather.time||"now").replace("T"," ")}`;
+    const windLabel=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°)`;
+    $("weatherDir").textContent=`${weather.speed<0.5?"Calm":windLabel} • ${String(weather.time||"now").replace("T"," ")}`;
+    if(weather.speed>=0.5){
+      const arrow=$("windSourceArrow");
+      arrow.style.transform=`rotate(${norm360(weather.fromDeg)}deg)`;
+      arrow.setAttribute("aria-label",windLabel);
+      arrow.title=windLabel;
+      arrow.classList.remove("hidden");
+    }
     calc();
   }catch(e){
     weather=null;
     $("weatherWind").textContent="Wind unavailable";
+    $("weatherDir").textContent="Could not load current wind";
+    $("windSourceArrow").classList.add("hidden");
     calc();
     $("windError").textContent="Could not load live wind. Switch to Manual if needed.";
   }
@@ -652,7 +671,53 @@ if(windMode==="auto"){
 }
 
 if("serviceWorker" in navigator){
-  window.addEventListener("load",()=>navigator.serviceWorker.register("./sw.js"));
+  const wasControlled=!!navigator.serviceWorker.controller;
+  let reloadingForUpdate=false;
+  let serviceWorkerRegistration=null;
+  navigator.serviceWorker.addEventListener("controllerchange",()=>{
+    if(wasControlled && !reloadingForUpdate){
+      reloadingForUpdate=true;
+      $("updateStatus").textContent="New version ready. Reloading…";
+      window.location.reload();
+    }
+  });
+
+  async function checkForUpdates(){
+    $("updateStatus").textContent="Checking for updates…";
+    try{
+      const registration=serviceWorkerRegistration || await navigator.serviceWorker.getRegistration("./");
+      if(!registration) throw new Error("Offline support is unavailable");
+      serviceWorkerRegistration=registration;
+      await registration.update();
+      if(!reloadingForUpdate){
+        $("updateStatus").textContent=registration.installing
+          ? "New version downloading…" : "You have the latest available version.";
+      }
+    }catch(e){
+      $("updateStatus").textContent="Could not check. Connect to the internet and try again.";
+    }
+  }
+
+  $("updateBtn").addEventListener("click",checkForUpdates);
+  window.addEventListener("load",async()=>{
+    try{
+      serviceWorkerRegistration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
+      serviceWorkerRegistration.addEventListener("updatefound",()=>{
+        if(wasControlled) $("updateStatus").textContent="New version downloading…";
+      });
+      await serviceWorkerRegistration.update();
+    }catch(e){
+      $("updateStatus").textContent="Offline support is unavailable.";
+    }
+  });
+  document.addEventListener("visibilitychange",()=>{
+    if(!document.hidden && serviceWorkerRegistration){
+      serviceWorkerRegistration.update().catch(()=>{});
+    }
+  });
+}else{
+  $("updateBtn").disabled=true;
+  $("updateStatus").textContent="Updates require a supported browser.";
 }
 </script>
 </body>
