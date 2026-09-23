@@ -3,7 +3,7 @@
   "short_name": "Golf Shot",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#6d766e",
+  "background_color": "#707970",
   "theme_color": "#153f2e",
   "description": "GPS and compass assisted golf shot and wind calculator.",
   "icons": [

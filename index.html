@@ -11,11 +11,11 @@
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Golf Shot Calculator</title>
   <style>
-    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#6d766e;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
+    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#707970;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:#6d766e;padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
+    body{margin:0;min-height:100vh;background:#707970;padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
     main{max-width:560px;margin:auto}
-    header{padding:4px 0 7px}h1{display:flex;align-items:center;gap:6px;font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap}h1 img{width:38px;height:auto;flex:none}.sub{margin:2px 0 0;color:var(--muted);font-size:clamp(10px,2.7vw,13px)}
+    header{padding:4px 0 7px}h1{display:flex;align-items:center;gap:6px;font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap;color:#fff}h1 img{width:38px;height:auto;flex:none}.sub{margin:2px 0 0;color:#fff;font-size:clamp(10px,2.7vw,13px)}
     .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;margin:9px 0;box-shadow:0 3px 10px #233e2710}
     .top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:stretch}
     .top-grid .card{margin:0;min-width:0;padding:9px}
@@ -53,7 +53,7 @@
     .result #summary{font-size:14px;font-weight:600}.result .muted{font-size:11px}
     table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px 4px;border-bottom:1px solid #e6ebe7;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}tr.best{font-weight:800;background:#f4f9f5}
     .settings-row{display:grid;grid-template-columns:44px 1fr 57px;gap:8px;align-items:center;margin:8px 0}.settings-row input{padding:10px;font-size:16px}
-    .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:var(--muted);padding:9px 4px}
+    .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:#fff;padding:9px 4px}
     .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
     .wind-section{padding-top:10px}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
     summary{cursor:pointer}
@@ -97,6 +97,7 @@
         <div class="status-card">
           <div class="between"><strong>Current location</strong><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
           <div class="muted" id="locationText">Location unavailable</div>
+          <div class="muted" id="locationAccuracy"></div>
           <div class="wind-big" id="weatherWind">—</div>
           <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
         </div>
@@ -194,6 +195,7 @@ let windMode = localStorage.getItem("gsc-windmode-v4") || "auto";
 
 let elevationM = clamp(Number(localStorage.getItem("gsc-elevation-v5")) || 0,-30,30);
 let gps = null;
+let locationRequestId = 0;
 let weather = null; // speed m/s, fromDeg
 let shotHeading = null;
 let latestCompassHeading = null;
@@ -418,6 +420,7 @@ function setWindMode(mode){
 }
 
 async function requestLocationAndWeather(){
+  const requestId=++locationRequestId;
   $("windError").textContent="";
   if(!navigator.geolocation){
     $("windError").textContent="Location is not supported by this browser.";
@@ -425,14 +428,20 @@ async function requestLocationAndWeather(){
   }
 
   $("locationText").textContent="Requesting location…";
+  $("locationAccuracy").textContent="";
   weather=null; calc();
 
   navigator.geolocation.getCurrentPosition(async pos=>{
+    if(requestId!==locationRequestId) return;
     gps={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy};
-    $("locationText").textContent=`${gps.lat.toFixed(4)}, ${gps.lon.toFixed(4)} • GPS ±${Math.round(gps.accuracy)} m`;
+    $("locationText").textContent="Finding place…";
+    $("locationAccuracy").textContent=`GPS ±${Math.round(gps.accuracy)} m`;
+    lookupPlace(gps,requestId);
     await fetchWeather();
   },err=>{
+    if(requestId!==locationRequestId) return;
     $("locationText").textContent="Location unavailable";
+    $("locationAccuracy").textContent="";
     $("weatherWind").textContent="—"; calc();
     $("windError").textContent="Allow location access in Safari/iPhone settings, then try again.";
   },{
@@ -440,6 +449,23 @@ async function requestLocationAndWeather(){
     timeout:12000,
     maximumAge:60000
   });
+}
+
+async function lookupPlace(position,requestId){
+  try{
+    const url=`https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${encodeURIComponent(position.lat)}&longitude=${encodeURIComponent(position.lon)}&localityLanguage=en`;
+    const res=await fetch(url);
+    if(!res.ok) throw new Error("Place lookup failed");
+    const data=await res.json();
+    if(requestId!==locationRequestId) return;
+    const place=String(data.city||data.locality||"").trim();
+    const country=String(data.countryName||"").trim();
+    $("locationText").textContent=place ? [place,country].filter(Boolean).join(", ") : `${position.lat.toFixed(4)}, ${position.lon.toFixed(4)}`;
+  }catch(e){
+    if(requestId===locationRequestId){
+      $("locationText").textContent=`${position.lat.toFixed(4)}, ${position.lon.toFixed(4)}`;
+    }
+  }
 }
 
 async function fetchWeather(){
