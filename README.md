@@ -1,43 +1,22 @@
-# Golf Shot Calculator v4
+# Golf Shot Calculator v5
 
 Created by Camilla Remstedt, 2026.
 
-## New in v4
-- GPS-based live wind using your iPhone location.
-- Current 10 m wind speed and meteorological wind direction from Open-Meteo.
-- Shot direction can be captured from the iPhone compass:
-  point the top of the iPhone at the target and tap **Set direction from phone**.
-- Live wind is converted into headwind/tailwind and left/right crosswind components relative to the shot.
-- Manual wind mode remains available as a fallback.
-- Elevation control from -10 m to +10 m.
-- Carry / Including roll.
-- Metres / Yards.
-- Straight / Fade.
-- Custom club carry distances stored locally.
+## What is included
 
-## iPhone permissions
-The first time you use live mode, iOS may ask for:
-- Location access
-- Motion & Orientation / compass access
+- iPhone layout based on the supplied Layout.pdf: Shot and compact recommendation side by side, followed by elevation, wind, full result, club table and settings.
+- Carry or Total (including roll) for club selection; Meters or Yards for distances.
+- Elevation to green: -10 to +10 metres; Straight or Fade.
+- GPS wind from Open-Meteo and shot direction locked from the iPhone compass.
+- Manual wind speed and direction as a fallback; adjustable custom carry distances.
+- Home Screen PWA with offline access to the interface and saved club distances.
 
-These permissions are required for GPS wind and phone-heading shot direction.
+## Use live wind on iPhone
 
-## Weather source
-Live wind is requested from Open-Meteo using:
-- wind_speed_10m
-- wind_direction_10m
-- m/s wind units
+Open from your HTTPS GitHub Pages link, tap **Use my location** and allow location access. Point the top of the phone at your target, then tap **Set direction from phone** and grant orientation permission. Refresh obtains a fresh GPS fix and live wind; lock a new direction for each shot. The current wind is 10 m weather-model data, so local conditions may differ. When wind or heading is unavailable, the result says **Calm estimate • live wind pending**. Select **Manual wind** to enter local conditions yourself. Compass accuracy may be affected by magnetic interference and local magnetic declination.
 
-Weather-model wind can differ from the wind experienced at the exact ball position because of trees, terrain, buildings and gusts.
+## Update your existing GitHub Pages repository
 
-## Update existing GitHub Pages
-Upload/replace these files in the existing repository:
-- index.html
-- manifest.webmanifest
-- sw.js
-- icon-180.png
-- icon-192.png
-- icon-512.png
-- README.md
+Unzip the archive and upload all seven files from its root to your existing repository, replacing matching names. Keep Settings → Pages set to the same branch and root. The URL stays the same. Load the page while online after the update to cache v5, then reopen the Home Screen app if an older version appears.
 
-Keep the same GitHub Pages settings and URL.
+The interface works offline after first load. GPS weather requires a connection; the compass requires a compatible sensor and browser permission. Preferences and club distances stay in the device's local browser storage.

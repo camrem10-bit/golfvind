@@ -1,31 +1,20 @@
-const CACHE="golf-shot-calculator-v4";
+const CACHE="golf-shot-calculator-v5";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./icon-180.png","./icon-192.png","./icon-512.png"];
-
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS)));
   self.skipWaiting();
 });
-
 self.addEventListener("activate",event=>{
-  event.waitUntil(
-    caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
-  );
+  event.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k.startsWith("golf-shot-calculator-")&&k!==CACHE).map(k=>caches.delete(k)))));
   self.clients.claim();
 });
-
 self.addEventListener("fetch",event=>{
-  const url=new URL(event.request.url);
-  if(url.hostname.includes("open-meteo.com")){
-    event.respondWith(fetch(event.request));
-    return;
-  }
-  event.respondWith(
-    fetch(event.request)
-      .then(response=>{
-        const copy=response.clone();
-        caches.open(CACHE).then(cache=>cache.put(event.request,copy));
-        return response;
-      })
-      .catch(()=>caches.match(event.request).then(c=>c||caches.match("./index.html")))
-  );
+  const request=event.request;
+  if(request.method!=="GET") return;
+  const url=new URL(request.url);
+  if(url.origin!==self.location.origin) return; // Weather requests always go to the network.
+  event.respondWith(fetch(request).then(response=>{
+    if(response.ok) caches.open(CACHE).then(cache=>cache.put(request,response.clone()));
+    return response;
+  }).catch(()=>caches.match(request).then(cached=>cached||caches.match("./index.html"))));
 });

@@ -11,100 +11,54 @@
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Golf Shot Calculator</title>
   <style>
-    :root{
-      font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
-      color:#172018;background:#eef2ef;
-      --green:#153f2e;--green2:#eaf4ec;--line:#d8e0da;--muted:#6b756f;
-    }
+    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#f4f8f3;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
     *{box-sizing:border-box}
-    body{
-      margin:0;min-height:100vh;
-      background:linear-gradient(180deg,#eef2ef 0,#f8faf8 100%);
-      padding:env(safe-area-inset-top) 14px calc(18px + env(safe-area-inset-bottom));
-    }
-    main{max-width:760px;margin:auto}
-    header{padding:12px 4px 8px}
-    h1{font-size:30px;margin:0;letter-spacing:-.7px}
-    .sub{margin:4px 0 0;color:var(--muted);font-size:14px}
-    .card{
-      background:#fff;border:1px solid var(--line);border-radius:20px;
-      padding:16px;margin:12px 0;box-shadow:0 4px 18px rgba(0,0,0,.035)
-    }
-    .top-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
-    .split{border-left:1px solid #e1e6e2;padding-left:18px}
-    .section-title{font-size:21px;font-weight:800;margin-bottom:12px}
-    label{display:block;font-size:13px;font-weight:700;color:#37433c;margin:12px 0 6px}
-    input[type=number]{
-      width:100%;font-size:18px;padding:12px;border:1px solid #c9d2cc;border-radius:13px;background:#fff
-    }
-    input[type=range]{width:100%;accent-color:var(--green)}
-    .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-    .seg button,.btn,.small-btn{
-      border:1px solid #cbd5cf;background:#fff;border-radius:12px;padding:11px 10px;
-      font-size:15px;font-weight:700;color:#26342c
-    }
-    button{cursor:pointer}
+    body{margin:0;min-height:100vh;background:linear-gradient(#f2f7f1,#fbfdfb);padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
+    main{max-width:560px;margin:auto}
+    header{padding:4px 0 7px}h1{font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap}.sub{margin:2px 0 0;color:var(--muted);font-size:clamp(10px,2.7vw,13px)}
+    .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;margin:9px 0;box-shadow:0 3px 10px #233e2710}
+    .top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:stretch}
+    .top-grid .card{margin:0;min-width:0;padding:9px}
+    .section-title{font-size:16px;font-weight:800;margin-bottom:3px}
+    label{display:block;font-size:11px;font-weight:700;margin:9px 0 5px}
+    input[type=number]{width:100%;font-size:16px;padding:9px 10px;border:1px solid #ccd9ce;border-radius:11px;background:#fff;min-width:0}
+    input[type=range]{width:100%;accent-color:var(--green);min-width:0}
+    .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
+    .seg button,.btn,.small-btn{border:1px solid #ccd9ce;background:#fff;border-radius:7px;padding:7px 4px;font-size:11px;font-weight:700;color:#26342c;min-width:0;touch-action:manipulation}
+    button{cursor:pointer;font-family:inherit}
     .seg button.active,.btn.primary{background:var(--green);color:#fff;border-color:var(--green)}
-    .row{display:flex;align-items:center;gap:10px}
-    .between{display:flex;align-items:center;justify-content:space-between;gap:10px}
-    .muted{color:var(--muted);font-size:13px}
-    .elev-wrap{display:grid;grid-template-columns:38px 1fr 38px 68px;gap:8px;align-items:center}
-    .circle-btn{
-      width:38px;height:38px;border-radius:50%;border:1px solid #cbd5cf;background:#fff;
-      font-size:22px;line-height:1
-    }
-    .pill{
-      border:1px solid #cbd5cf;background:#fff;border-radius:10px;padding:9px 8px;text-align:center;font-weight:700
-    }
-    .status-card{
-      background:#eff7f1;border:1px solid #d8e8db;border-radius:14px;padding:12px;margin-top:10px
-    }
-    .status-card strong{font-size:17px}
-    .wind-big{font-size:22px;font-weight:800;margin-top:6px}
-    .dial-wrap{display:flex;justify-content:center;padding:4px 0}
-    .dial{
-      width:144px;height:144px;border-radius:50%;position:relative;
-      background:radial-gradient(circle at center,#fff 0 58%,#eef4ef 59% 100%);
-      border:1px solid #d3dcd6;touch-action:none;user-select:none
-    }
+    .between{display:flex;align-items:center;justify-content:space-between;gap:8px}
+    .muted{color:var(--muted);font-size:11px;line-height:1.35}
+    .preview{background:var(--green2)!important}
+    .preview-body{display:flex;justify-content:space-between;gap:3px;align-items:center}
+    .preview .big{font-size:clamp(36px,10vw,53px);line-height:1}
+    .preview-stat{font-size:clamp(10px,2.8vw,14px);line-height:1.3;text-align:right;white-space:nowrap}
+    .preview-gap{font-size:11px;margin-top:5px}
+    .inline-unit{margin-top:10px}
+    .elev-wrap{display:grid;grid-template-columns:27px minmax(0,1fr) 27px 48px;gap:5px;align-items:center}
+    .circle-btn{width:27px;height:27px;border-radius:50%;border:1px solid #cbd5cf;background:#fff;font-size:19px;line-height:1}
+    .pill{border:1px solid #cbd5cf;background:#fff;border-radius:9px;padding:7px 2px;text-align:center;font-size:12px;font-weight:700;white-space:nowrap}
+    .status-card{background:#eff9f1;border:1px solid #d2e7d6;border-radius:11px;padding:9px;margin-top:10px}
+    .status-card strong{font-size:14px}.wind-big{font-size:22px;font-weight:800;margin:7px 0}
+    .dial-wrap{display:flex;justify-content:center;padding:6px 0}
+    .dial{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%);border:1px solid #d3dcd6;touch-action:none;user-select:none}
     .dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:800}
-    .mark.top{top:7px;left:50%;transform:translateX(-50%)}
-    .mark.right{right:8px;top:50%;transform:translateY(-50%)}
-    .mark.bottom{bottom:7px;left:50%;transform:translateX(-50%)}
-    .mark.left{left:8px;top:50%;transform:translateY(-50%)}
-    .arrow{
-      position:absolute;left:50%;top:50%;width:5px;height:50px;background:var(--green);
-      border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(180deg)
-    }
-    .arrow:before{
-      content:"";position:absolute;left:50%;top:-9px;transform:translateX(-50%);
-      border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid var(--green)
-    }
-    .hub{
-      position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;
-      background:#fff;border:4px solid var(--green);transform:translate(-50%,-50%)
-    }
-    .direction-text{text-align:center;font-weight:800;margin-top:4px}
-    .component-text{text-align:center;font-size:12px;color:var(--muted);line-height:1.5}
-    .result{background:var(--green2);border-color:#cddfcf}
-    .big{font-size:44px;font-weight:800;letter-spacing:-1px;margin:2px 0}
-    table{width:100%;border-collapse:collapse;font-size:14px}
-    th,td{padding:10px 5px;border-bottom:1px solid #e6ebe7;text-align:right}
-    th:first-child,td:first-child{text-align:left}
-    tr.best{font-weight:800;background:#f4f9f5}
-    .settings-row{display:grid;grid-template-columns:70px 1fr 70px;gap:8px;align-items:center;margin:8px 0}
-    .settings-row input{padding:10px;font-size:16px}
-    .footer-note{font-size:12px;line-height:1.45;color:#707a74}
-    .creator-footer{text-align:center;font-size:12px;color:var(--muted);padding:10px 4px}
-    .hidden{display:none!important}
-    .error{color:#a33;font-size:12px;margin-top:7px}
-    .success{color:#315c42;font-size:12px;margin-top:7px}
-    .shot-heading{font-size:26px;font-weight:800}
-    .compass-btn{width:100%;margin-top:8px}
-    @media(max-width:640px){
-      .top-grid{grid-template-columns:1fr}
-      .split{border-left:0;border-top:1px solid #e1e6e2;padding-left:0;padding-top:16px}
-    }
+    .mark.top{top:7px;left:50%;transform:translateX(-50%)}.mark.right{right:8px;top:50%;transform:translateY(-50%)}.mark.bottom{bottom:7px;left:50%;transform:translateX(-50%)}.mark.left{left:8px;top:50%;transform:translateY(-50%)}
+    .arrow{position:absolute;left:50%;top:50%;width:5px;height:45px;background:var(--green);border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(180deg)}
+    .arrow:before{content:"";position:absolute;left:50%;top:-9px;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid var(--green)}
+    .hub{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--green);transform:translate(-50%,-50%)}
+    .direction-text{font-weight:800;margin-top:8px;font-size:14px}.component-text{font-size:11px;color:var(--muted);line-height:1.45;margin-top:3px}
+    .result{background:var(--green2);border-color:#cddfcf}.big{font-size:44px;font-weight:800;letter-spacing:-1px;margin:2px 0}
+    .result #summary{font-size:14px;font-weight:600}.result .muted{font-size:11px}
+    table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px 4px;border-bottom:1px solid #e6ebe7;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}tr.best{font-weight:800;background:#f4f9f5}
+    .settings-row{display:grid;grid-template-columns:44px 1fr 57px;gap:8px;align-items:center;margin:8px 0}.settings-row input{padding:10px;font-size:16px}
+    .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:var(--muted);padding:9px 4px}
+    .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
+    .wind-section{padding-top:10px}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
+    .shot-shape{margin-top:9px;border-top:1px solid #e2eae3;padding-top:2px}
+    summary{cursor:pointer}
+    @media(max-width:350px){.top-grid{gap:6px}.top-grid .card{padding:7px}.seg button{font-size:10px}.preview-stat{font-size:10px}.elev-wrap{grid-template-columns:25px minmax(0,1fr) 25px 43px;gap:3px}}
+    @media(min-width:700px){main{max-width:630px}.top-grid{gap:12px}.top-grid .card{padding:14px}.card{padding:16px}}
   </style>
 </head>
 <body>
@@ -114,73 +68,43 @@
     <p class="sub">Wind-adjusted club selection, carry and total distance</p>
   </header>
 
+  <div class="top-grid">
+    <section class="card">
+      <div class="section-title">Shot</div>
+      <label for="dist">Distance to target</label>
+      <input id="dist" type="number" min="1" max="600" step="1" value="135" inputmode="numeric">
+      <label>Club selection based on</label>
+      <div class="seg"><button id="carryBtn" class="active" type="button">Carry</button><button id="totalBtn" type="button">Total</button></div>
+    </section>
+    <section class="card preview" aria-live="polite">
+      <div class="muted">Recommended club</div>
+      <div class="preview-body"><div class="big" id="previewClub">7i</div><div class="preview-stat" id="previewSummary">135 m carry<br>146 m total</div></div>
+      <div class="preview-gap" id="previewGap">On target based on carry</div>
+      <div class="muted" id="previewWindStatus"></div>
+      <label class="inline-unit">Distance unit</label>
+      <div class="seg"><button id="metresBtn" class="active" type="button">Meters</button><button id="yardsBtn" type="button">Yards</button></div>
+    </section>
+  </div>
   <section class="card">
-    <div class="top-grid">
-      <div>
-        <div class="section-title">Shot</div>
-
-        <label for="dist">Distance to target</label>
-        <input id="dist" type="number" min="20" max="400" step="1" value="135">
-
-        <label>Elevation</label>
-        <div class="elev-wrap">
-          <button class="circle-btn" id="elevMinus" type="button">−</button>
-          <input id="elev" type="range" min="-10" max="10" step="1" value="0">
-          <button class="circle-btn" id="elevPlus" type="button">+</button>
-          <div class="pill" id="elevValue">0 m</div>
+    <label for="elev" style="margin-top:0">Elevation to green</label>
+    <div class="elev-wrap"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-10" max="10" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
+    <div class="muted" id="elevText" style="text-align:center;margin-top:4px">Level</div>
+    <div class="shot-shape"><label>Shot shape</label><div class="seg"><button id="straightBtn" class="active" type="button">Straight</button><button id="fadeBtn" type="button">Fade</button></div></div>
+    <div class="wind-section">
+      <div class="section-title" style="border-top:1px solid var(--line);padding-top:9px">Wind</div>
+      <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
+      <div id="autoWind">
+        <div class="status-card">
+          <div class="between"><strong>Current location</strong><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
+          <div class="muted" id="locationText">Location unavailable</div>
+          <div class="wind-big" id="weatherWind">—</div>
+          <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
         </div>
-        <div class="muted" id="elevText" style="text-align:center;margin-top:4px">Level</div>
-
-        <label>Distance unit</label>
-        <div class="seg">
-          <button id="metresBtn" class="active" type="button">Metres</button>
-          <button id="yardsBtn" type="button">Yards</button>
-        </div>
-
-        <label>Club selection based on</label>
-        <div class="seg">
-          <button id="carryBtn" class="active" type="button">Carry</button>
-          <button id="totalBtn" type="button">Including roll</button>
-        </div>
-
-        <label>Shot shape</label>
-        <div class="seg">
-          <button id="straightBtn" class="active" type="button">Straight</button>
-          <button id="fadeBtn" type="button">Fade</button>
-        </div>
+        <label>Shot direction</label>
+        <div class="muted">Point the top of your iPhone towards the target.</div>
+        <button class="btn primary compass-btn" id="setDirectionBtn" type="button">Set direction from phone</button>
+        <div class="status-card"><div class="between"><span class="muted">Locked shot direction</span><span class="shot-heading" id="shotHeading">—</span></div><div class="muted" id="compassStatus">Not set</div></div>
       </div>
-
-      <div class="split">
-        <div class="section-title">Wind</div>
-
-        <div class="seg">
-          <button id="autoBtn" class="active" type="button">Use my location</button>
-          <button id="manualBtn" type="button">Manual</button>
-        </div>
-
-        <div id="autoWind">
-          <div class="status-card">
-            <div class="between">
-              <strong>Current location</strong>
-              <button class="small-btn" id="refreshWeather" type="button">Refresh</button>
-            </div>
-            <div class="muted" id="locationText">Location not loaded</div>
-            <div class="wind-big" id="weatherWind">—</div>
-            <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
-          </div>
-
-          <label>Shot direction</label>
-          <div class="muted">Point the top of your iPhone towards the target.</div>
-          <button class="btn primary compass-btn" id="setDirectionBtn" type="button">Set direction from phone</button>
-          <div class="status-card">
-            <div class="between">
-              <span class="muted">Locked shot direction</span>
-              <span class="shot-heading" id="shotHeading">—</span>
-            </div>
-            <div class="muted" id="compassStatus">Not set</div>
-          </div>
-        </div>
-
         <div id="manualWind" class="hidden">
           <label for="manualSpeed">Wind speed (m/s)</label>
           <input id="manualSpeed" type="number" min="0" max="30" step="0.5" value="10">
@@ -204,13 +128,9 @@
           <input id="manualDir" type="range" min="0" max="359" step="1" value="180">
         </div>
 
-        <div style="margin-top:12px">
-          <div class="direction-text" id="relativeWindText">Waiting for wind and shot direction</div>
-          <div class="component-text" id="componentsText"></div>
-        </div>
-
-        <div id="windError" class="error"></div>
-      </div>
+      <div class="direction-text" id="relativeWindText">Waiting for wind and shot direction</div>
+      <div class="component-text" id="componentsText"></div>
+      <div id="windError" class="error"></div>
     </div>
   </section>
 
@@ -221,6 +141,7 @@
     <div class="muted" id="gap"></div>
     <div class="muted" id="playAs"></div>
     <div class="muted" id="side"></div>
+    <div class="muted" id="resultWindStatus"></div>
   </section>
 
   <section class="card">
@@ -272,7 +193,7 @@ let selectionMode = localStorage.getItem("gsc-selection-v4") || "carry";
 let shape = localStorage.getItem("gsc-shape-v4") || "Straight";
 let windMode = localStorage.getItem("gsc-windmode-v4") || "auto";
 
-let elevationM = 0;
+let elevationM = clamp(Number(localStorage.getItem("gsc-elevation-v5")) || 0,-10,10);
 let gps = null;
 let weather = null; // speed m/s, fromDeg
 let shotHeading = null;
@@ -303,6 +224,7 @@ function setButtons(){
 }
 
 function updateElevationUI(){
+  localStorage.setItem("gsc-elevation-v5",String(elevationM));
   const valD = toDisplay(elevationM);
   const rounded = Math.round(valD);
   $("elevValue").textContent = `${rounded>0?"+":""}${rounded} ${unitLabel()}`;
@@ -334,7 +256,7 @@ function manualDirectionDescription(d){
 // Returns along wind component: + = tailwind, - = headwind.
 // cross: + = wind from left, - = wind from right.
 function liveWindComponents(){
-  if(!weather || shotHeading===null) return null;
+  if(!weather || !Number.isFinite(weather.speed) || !Number.isFinite(weather.fromDeg) || shotHeading===null) return null;
 
   const relativeSource = norm360(weather.fromDeg - shotHeading);
   const rad = relativeSource * Math.PI/180;
@@ -382,7 +304,7 @@ function updateRelativeWindText(){
 }
 
 function calc(){
-  const targetDisplay=Math.max(20,Number($("dist").value)||135);
+  const targetDisplay=Math.max(1,Number($("dist").value)||135);
   const targetM=fromDisplay(targetDisplay);
   const effectiveTargetM=targetM+elevationM;
   const {along,cross}=activeWindComponents();
@@ -422,6 +344,8 @@ function calc(){
   const u=unitLabel();
 
   $("club").textContent=best.n;
+  $("previewClub").textContent=best.n;
+  $("previewSummary").innerHTML=`${toDisplay(best.carryM).toFixed(0)} ${u} carry<br>${toDisplay(best.totalM).toFixed(0)} ${u} total`;
   $("summary").textContent=`${toDisplay(best.carryM).toFixed(0)} ${u} carry • ${toDisplay(best.totalM).toFixed(0)} ${u} total`;
 
   const diffD=toDisplay(best.diffM);
@@ -430,6 +354,12 @@ function calc(){
   }else{
     $("gap").textContent=`${Math.abs(diffD).toFixed(0)} ${u} ${diffD>0?"long":"short"} based on ${selectionMode==="carry"?"carry":"including roll"}`;
   }
+
+  $("previewGap").textContent=$("gap").textContent;
+  const windStatus=windMode==="auto" && !liveWindComponents()
+    ? "Calm estimate • live wind pending" : "";
+  $("previewWindStatus").textContent=windStatus;
+  $("resultWindStatus").textContent=windStatus;
 
   if(elevationM!==0){
     $("playAs").textContent=`Plays as ${toDisplay(effectiveTargetM).toFixed(0)} ${u} with ${toDisplay(elevationM)>0?"+":""}${toDisplay(elevationM).toFixed(0)} ${u} elevation`;
@@ -444,9 +374,10 @@ function calc(){
 
   $("rows").innerHTML=results.map(x=>{
     const c=toDisplay(x.carryM),t=toDisplay(x.totalM),d=toDisplay(x.diffM);
+    const roundedDiff=Math.round(d);
     return `<tr class="${x.n===best.n?"best":""}">
       <td>${x.n}</td><td>${c.toFixed(0)} ${u}</td><td>${t.toFixed(0)} ${u}</td>
-      <td>${d>=0?"+":""}${d.toFixed(0)} ${u}</td>
+      <td>${roundedDiff>=0?"+":""}${roundedDiff} ${u}</td>
     </tr>`;
   }).join("");
 
@@ -501,6 +432,7 @@ async function requestLocationAndWeather(){
   }
 
   $("locationText").textContent="Requesting location…";
+  weather=null; calc();
 
   navigator.geolocation.getCurrentPosition(async pos=>{
     gps={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy};
@@ -508,6 +440,7 @@ async function requestLocationAndWeather(){
     await fetchWeather();
   },err=>{
     $("locationText").textContent="Location unavailable";
+    $("weatherWind").textContent="—"; calc();
     $("windError").textContent="Allow location access in Safari/iPhone settings, then try again.";
   },{
     enableHighAccuracy:true,
@@ -527,6 +460,7 @@ async function fetchWeather(){
     if(!res.ok) throw new Error("Weather request failed");
     const data=await res.json();
 
+    if(!Number.isFinite(Number(data.current?.wind_speed_10m)) || !Number.isFinite(Number(data.current?.wind_direction_10m))) throw new Error("Invalid wind data");
     weather={
       speed:Number(data.current.wind_speed_10m),
       fromDeg:Number(data.current.wind_direction_10m),
@@ -534,10 +468,12 @@ async function fetchWeather(){
     };
 
     $("weatherWind").textContent=`${degToCardinal(weather.fromDeg)} ${weather.speed.toFixed(1)} m/s`;
-    $("weatherDir").textContent=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°) • ${weather.time.replace("T"," ")}`;
+    $("weatherDir").textContent=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°) • ${String(weather.time||"now").replace("T"," ")}`;
     calc();
   }catch(e){
+    weather=null;
     $("weatherWind").textContent="Wind unavailable";
+    calc();
     $("windError").textContent="Could not load live wind. Switch to Manual if needed.";
   }
 }
@@ -547,7 +483,7 @@ function extractCompassHeading(event){
     return event.webkitCompassHeading;
   }
   if(typeof event.alpha==="number"){
-    return norm360(360-event.alpha);
+    if(event.absolute===true) return norm360(360-event.alpha);
   }
   return null;
 }
@@ -591,7 +527,7 @@ async function setShotDirectionFromPhone(){
     return;
   }
 
-  await new Promise(r=>setTimeout(r,900));
+  await new Promise(r=>setTimeout(r,2000));
 
   if(latestCompassHeading===null){
     $("compassStatus").textContent="No compass reading received";
@@ -606,7 +542,8 @@ async function setShotDirectionFromPhone(){
   calc();
 }
 
-const savedHeading=Number(localStorage.getItem("gsc-shotheading-v4"));
+const storedHeading=localStorage.getItem("gsc-shotheading-v4");
+const savedHeading=storedHeading===null ? NaN : Number(storedHeading);
 if(Number.isFinite(savedHeading)){
   shotHeading=savedHeading;
   $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
@@ -683,7 +620,7 @@ renderClubSettings();
 calc();
 
 if(windMode==="auto"){
-  requestLocationAndWeather();
+  $("windError").textContent="Tap Use my location to load live wind.";
 }
 
 if("serviceWorker" in navigator){
