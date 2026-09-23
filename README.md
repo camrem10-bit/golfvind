@@ -8,13 +8,13 @@ Created by Camilla Remstedt, 2026.
 - Custom supplied green golf logo beside the title; page background #707970 with white header and footer text.
 - Carry or Total (including roll) for club selection; Meters or Yards for distances.
 - Elevation to green: -30 to +30 metres (approximately -33 to +33 yards); straight shots only.
-- GPS wind from Open-Meteo, locality name from BigDataCloud, and shot direction locked from the iPhone compass.
+- GPS wind from Open-Meteo, locality name from BigDataCloud, and live shot direction from the iPhone compass.
 - Manual wind speed and direction as a fallback; adjustable custom carry distances.
 - Home Screen PWA with offline access to the interface and saved club distances.
 
 ## Use live wind on iPhone
 
-Open from your HTTPS GitHub Pages link, tap **Use my location** and allow location access. The app sends your current GPS coordinates to Open-Meteo for wind and to BigDataCloud for the place name, such as Ystad, Sweden. If the place lookup fails, coordinates are shown and weather loading continues. Point the top of the phone at your target, then tap **Set direction from phone** and grant orientation permission. Refresh obtains a fresh GPS fix and live wind; lock a new direction for each shot. The current wind is 10 m weather-model data, so local conditions may differ. When wind or heading is unavailable, the result says **Calm estimate • live wind pending**. Select **Manual wind** to enter local conditions yourself. Compass accuracy may be affected by magnetic interference and local magnetic declination.
+Open from your HTTPS GitHub Pages link, tap **Use my location** and allow location access. The app sends your current GPS coordinates to Open-Meteo for wind and to BigDataCloud for the place name, such as Ystad, Sweden. If the place lookup fails, coordinates are shown and weather loading continues. Point the top of the phone at your target and tap **Enable live direction** if permission is requested. The heading, relative wind and club choice then update as you turn the phone while the app is open. You do not need to set a new direction for each shot. An old direction is never reused after reopening or resuming the app. Refresh obtains a fresh GPS fix and weather data. The current wind is 10 m weather-model data, so local conditions may differ. When wind or heading is unavailable, the result says **Calm estimate • live wind pending**. Select **Manual wind** to enter local conditions yourself. Compass accuracy may be affected by magnetic interference and local magnetic declination.
 
 ## Update your existing GitHub Pages repository
 

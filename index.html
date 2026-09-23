@@ -102,9 +102,9 @@
           <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
         </div>
         <label>Shot direction</label>
-        <div class="muted">Point the top of your iPhone towards the target.</div>
-        <button class="btn primary compass-btn" id="setDirectionBtn" type="button">Set direction from phone</button>
-        <div class="status-card"><div class="between"><span class="muted">Locked shot direction</span><span class="shot-heading" id="shotHeading">—</span></div><div class="muted" id="compassStatus">Not set</div></div>
+        <div class="muted">Point the top of your iPhone towards the target. Direction updates as you turn.</div>
+        <button class="btn primary compass-btn" id="setDirectionBtn" type="button">Enable live direction</button>
+        <div class="status-card"><div class="between"><span class="muted">Live shot direction</span><span class="shot-heading" id="shotHeading">—</span></div><div class="muted" id="compassStatus">Enable compass once, then aim your phone</div></div>
       </div>
         <div id="manualWind" class="hidden">
           <label for="manualSpeed">Wind speed (m/s)</label>
@@ -198,8 +198,8 @@ let gps = null;
 let locationRequestId = 0;
 let weather = null; // speed m/s, fromDeg
 let shotHeading = null;
-let latestCompassHeading = null;
 let compassListening = false;
+let lastCompassUpdate = 0;
 
 function toDisplay(m){ return unit==="yd" ? m*M_TO_YD : m; }
 function fromDisplay(v){ return unit==="yd" ? v/M_TO_YD : v; }
@@ -498,23 +498,36 @@ async function fetchWeather(){
 }
 
 function extractCompassHeading(event){
-  if(typeof event.webkitCompassHeading==="number"){
+  if(Number.isFinite(event.webkitCompassHeading) && event.webkitCompassHeading>=0){
     return event.webkitCompassHeading;
   }
-  if(typeof event.alpha==="number"){
+  if(Number.isFinite(event.alpha)){
     if(event.absolute===true) return norm360(360-event.alpha);
   }
   return null;
 }
 
 function orientationHandler(event){
+  if(document.hidden) return;
   const h=extractCompassHeading(event);
-  if(h!==null) latestCompassHeading=h;
+  if(h===null) return;
+  const now=Date.now();
+  if(shotHeading!==null && now-lastCompassUpdate<250) return;
+  lastCompassUpdate=now;
+  shotHeading=norm360(h);
+  $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
+  $("compassStatus").textContent="Updating automatically while the app is open";
+  $("setDirectionBtn").classList.add("hidden");
+  calc();
 }
 
 async function ensureCompass(){
   $("windError").textContent="";
   try{
+    if(typeof DeviceOrientationEvent==="undefined"){
+      $("windError").textContent="This device does not provide compass direction. Use Manual wind.";
+      return false;
+    }
     if(typeof DeviceOrientationEvent!=="undefined" &&
        typeof DeviceOrientationEvent.requestPermission==="function"){
       const permission=await DeviceOrientationEvent.requestPermission();
@@ -537,8 +550,7 @@ async function ensureCompass(){
 }
 
 async function setShotDirectionFromPhone(){
-  $("compassStatus").textContent="Reading compass…";
-  latestCompassHeading=null;
+  $("compassStatus").textContent="Waiting for live direction…";
 
   const ok=await ensureCompass();
   if(!ok){
@@ -546,28 +558,15 @@ async function setShotDirectionFromPhone(){
     return;
   }
 
-  await new Promise(r=>setTimeout(r,2000));
-
-  if(latestCompassHeading===null){
-    $("compassStatus").textContent="No compass reading received";
-    $("windError").textContent="On iPhone, open the installed app/Safari and allow Motion & Orientation access.";
-    return;
-  }
-
-  shotHeading=norm360(latestCompassHeading);
-  $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
-  $("compassStatus").textContent="Direction locked";
-  localStorage.setItem("gsc-shotheading-v4",String(shotHeading));
-  calc();
+  setTimeout(()=>{
+    if(shotHeading===null){
+      $("compassStatus").textContent="No compass reading received";
+      $("windError").textContent="Move the phone and allow Motion & Orientation access in Safari/iPhone settings.";
+    }
+  },3000);
 }
 
-const storedHeading=localStorage.getItem("gsc-shotheading-v4");
-const savedHeading=storedHeading===null ? NaN : Number(storedHeading);
-if(Number.isFinite(savedHeading)){
-  shotHeading=savedHeading;
-  $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
-  $("compassStatus").textContent="Saved direction — update before your next shot";
-}
+// A previous shot's compass heading is deliberately not reused after reopening the app.
 
 $("metresBtn").addEventListener("click",()=>changeUnit("m"));
 $("yardsBtn").addEventListener("click",()=>changeUnit("yd"));
@@ -630,6 +629,23 @@ updateElevationUI();
 updateManualDial();
 renderClubSettings();
 calc();
+// If the browser has retained sensor permission, start live updates on opening.
+// On iPhone, the button above requests permission in response to a tap when needed.
+if(typeof DeviceOrientationEvent!=="undefined"){
+  window.addEventListener("deviceorientationabsolute",orientationHandler,true);
+  window.addEventListener("deviceorientation",orientationHandler,true);
+  compassListening=true;
+}
+document.addEventListener("visibilitychange",()=>{
+  if(!document.hidden){
+    shotHeading=null;
+    lastCompassUpdate=0;
+    $("shotHeading").textContent="—";
+    $("compassStatus").textContent="Aim the phone to update direction";
+    $("setDirectionBtn").classList.remove("hidden");
+    calc();
+  }
+});
 
 if(windMode==="auto"){
   $("windError").textContent="Tap Use my location to load live wind.";
