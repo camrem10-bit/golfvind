@@ -1,37 +1,36 @@
-# Golfvind PWA v1
+# Golf Shot Calculator PWA v2
 
-Detta är en installerbar webbapp (PWA) för iPhone.
+## Changes in v2
+- Entire interface is now in English.
+- New club-selection toggle:
+  - Carry
+  - Including roll
+- New unit toggle:
+  - Metres
+  - Yards
+- Recommended club follows the selected distance mode.
+- Target distance, club distances, table results and lateral movement switch between metres and yards.
+- Wind direction control is smaller and more compact.
+- User club carry distances are saved locally on the device.
+- Offline support remains enabled.
 
-## Viktigt
-För att "Lägg till på hemskärmen" och offline-funktionen ska fungera som en riktig PWA måste filerna ligga på en vanlig HTTPS-webbadress. Att bara öppna index.html direkt från appen Filer räcker inte för service worker/offline-läget.
-
-## Innehåll
+## Updating your existing GitHub Pages version
+Replace these files in your existing `golfwind` repository:
 - index.html
 - manifest.webmanifest
 - sw.js
-- appikoner 180, 192 och 512 px
+- icon-180.png
+- icon-192.png
+- icon-512.png
 
-## Installation på iPhone när sidan ligger online
-1. Öppna Golfvind-adressen i Safari.
-2. Tryck på Dela.
-3. Välj "Lägg till på hemskärmen".
-4. Tryck "Lägg till".
-5. Golfvind visas som en egen appikon och öppnas utan Safaris vanliga gränssnitt.
+You can also replace README.md.
 
-## Funktioner
-- Avstånd till flagga
-- Vind 0–30 m/s
-- Dragbar vindpil 0–359°
-- Rak eller fade
-- Rekommenderad klubba
-- Carry och total längd
-- Skillnad mot flaggan
-- Uppskattad sidled
-- Egna carry-längder sparas lokalt
-- Offline-stöd efter första laddningen
+Keep the same repository and the same GitHub Pages settings.
+Your existing GitHub Pages URL will stay the same.
 
-## Vindriktning
-- 0° = medvind
-- 90° = vind från vänster
-- 180° = motvind
-- 270° = vind från höger
+After updating, Safari may briefly show the old cached version.
+If so, reload the page once or close and reopen Golf Shot Calculator.
+
+
+## Credit
+Created by Camilla Remstedt, 2026.

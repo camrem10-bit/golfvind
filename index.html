@@ -1,67 +1,79 @@
 <!doctype html>
-<html lang="sv">
+<html lang="en">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="#153f2e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <meta name="apple-mobile-web-app-title" content="Golfvind">
+  <meta name="apple-mobile-web-app-title" content="Golf Shot Calculator">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
-  <title>Golfvind</title>
+  <title>Golf Shot Calculator</title>
   <style>
     :root{
       font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
       color:#18231d;
       background:#eef2ef;
       --green:#153f2e;
-      --light:#edf5ef;
       --line:#d7dfd9;
       --muted:#6b756f;
     }
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:linear-gradient(180deg,#eef2ef 0,#f7f9f7 100%);padding:env(safe-area-inset-top) 14px calc(22px + env(safe-area-inset-bottom))}
+    body{
+      margin:0;min-height:100vh;
+      background:linear-gradient(180deg,#eef2ef 0,#f7f9f7 100%);
+      padding:env(safe-area-inset-top) 14px calc(22px + env(safe-area-inset-bottom))
+    }
     main{max-width:640px;margin:auto}
-    header{padding:14px 4px 8px;display:flex;justify-content:space-between;align-items:flex-start}
+    header{padding:14px 4px 8px}
     h1{margin:0;font-size:31px;letter-spacing:-.7px}
     .sub{margin:4px 0 0;color:var(--muted);font-size:14px}
-    .card{background:#fff;border:1px solid var(--line);border-radius:20px;padding:16px;margin:12px 0;box-shadow:0 4px 18px rgba(0,0,0,.035)}
+    .card{
+      background:#fff;border:1px solid var(--line);border-radius:20px;
+      padding:16px;margin:12px 0;box-shadow:0 4px 18px rgba(0,0,0,.035)
+    }
     .section-title{font-weight:750;font-size:17px;margin-bottom:13px}
     label{display:block;font-size:13px;font-weight:650;color:#3b4741;margin:12px 0 6px}
-    input[type=number], select{
-      width:100%;font-size:18px;padding:13px 12px;border:1px solid #c9d2cc;border-radius:13px;background:#fff;color:#172018
+    input[type=number]{
+      width:100%;font-size:18px;padding:13px 12px;border:1px solid #c9d2cc;
+      border-radius:13px;background:#fff;color:#172018
     }
     input[type=range]{width:100%;accent-color:var(--green)}
     .grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
     .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
     .seg button,.small-btn{
-      border:1px solid #cbd5cf;background:#fff;border-radius:12px;padding:11px 10px;font-size:15px;font-weight:650;color:#26342c
+      border:1px solid #cbd5cf;background:#fff;border-radius:12px;
+      padding:11px 10px;font-size:15px;font-weight:650;color:#26342c
     }
     .seg button.active{background:var(--green);color:#fff;border-color:var(--green)}
     .windread{display:flex;justify-content:space-between;align-items:baseline}
-    .windread strong{font-size:20px}
-    .dial-wrap{display:flex;justify-content:center;padding:8px 0 2px}
+    .windread strong{font-size:18px}
+    .dial-wrap{display:flex;justify-content:center;padding:2px 0 0}
     .dial{
-      width:210px;height:210px;border-radius:50%;position:relative;
+      width:152px;height:152px;border-radius:50%;position:relative;
       background:radial-gradient(circle at center,#fff 0 58%,#eef3ef 59% 100%);
       border:1px solid #d3dcd6;touch-action:none;user-select:none
     }
-    .dial .mark{position:absolute;font-size:12px;color:#65716a;font-weight:700}
-    .mark.top{top:9px;left:50%;transform:translateX(-50%)}
-    .mark.right{right:10px;top:50%;transform:translateY(-50%)}
-    .mark.bottom{bottom:9px;left:50%;transform:translateX(-50%)}
-    .mark.left{left:10px;top:50%;transform:translateY(-50%)}
+    .dial .mark{position:absolute;font-size:10px;color:#65716a;font-weight:700}
+    .mark.top{top:7px;left:50%;transform:translateX(-50%)}
+    .mark.right{right:8px;top:50%;transform:translateY(-50%)}
+    .mark.bottom{bottom:7px;left:50%;transform:translateX(-50%)}
+    .mark.left{left:8px;top:50%;transform:translateY(-50%)}
     .arrow{
-      position:absolute;left:50%;top:50%;width:6px;height:76px;background:var(--green);
+      position:absolute;left:50%;top:50%;width:5px;height:53px;background:var(--green);
       border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(180deg)
     }
     .arrow:before{
-      content:"";position:absolute;left:50%;top:-11px;transform:translateX(-50%);
-      border-left:10px solid transparent;border-right:10px solid transparent;border-bottom:17px solid var(--green)
+      content:"";position:absolute;left:50%;top:-9px;transform:translateX(-50%);
+      border-left:8px solid transparent;border-right:8px solid transparent;
+      border-bottom:14px solid var(--green)
     }
-    .hub{position:absolute;left:50%;top:50%;width:18px;height:18px;border-radius:50%;background:#fff;border:5px solid var(--green);transform:translate(-50%,-50%)}
-    .direction-text{text-align:center;font-weight:700;margin-top:8px}
+    .hub{
+      position:absolute;left:50%;top:50%;width:15px;height:15px;border-radius:50%;
+      background:#fff;border:4px solid var(--green);transform:translate(-50%,-50%)
+    }
+    .direction-text{text-align:center;font-weight:700;margin:4px 0 4px}
     .result{background:#eaf4ec;border-color:#cddfcf}
     .big{font-size:44px;font-weight:800;letter-spacing:-1px;margin:2px 0}
     .muted{color:var(--muted);font-size:14px}
@@ -69,79 +81,98 @@
     th,td{padding:10px 5px;border-bottom:1px solid #e6ebe7;text-align:right}
     th:first-child,td:first-child{text-align:left}
     tr.best{font-weight:800;background:#f6faf7}
-    .settings-row{display:grid;grid-template-columns:70px 1fr 58px;gap:8px;align-items:center;margin:8px 0}
+    .settings-row{display:grid;grid-template-columns:70px 1fr 72px;gap:8px;align-items:center;margin:8px 0}
     .settings-row input{padding:10px;font-size:16px}
     .footer-note{font-size:12px;line-height:1.45;color:#707a74}
-    .toolbar{display:flex;gap:8px}
-    .toolbar button{border:0;background:#fff;border-radius:12px;padding:9px 11px;font-size:16px;box-shadow:0 1px 3px rgba(0,0,0,.08)}
     details summary{cursor:pointer;font-weight:700}
-    @media(max-width:390px){.grid{grid-template-columns:1fr}.big{font-size:40px}}
+    .unit-note{font-size:12px;color:var(--muted);margin-top:7px}
+    .creator-footer{padding:10px 4px 4px;text-align:center;font-size:12px;color:var(--muted)}
+@media(max-width:390px){
+      .grid{grid-template-columns:1fr}
+      .big{font-size:40px}
+    }
   </style>
 </head>
 <body>
 <main>
   <header>
-    <div>
-      <h1>⛳ Golfvind</h1>
-      <p class="sub">Vindjusterad klubba, carry och total längd</p>
-    </div>
+    <h1>⛳ Golf Shot Calculator</h1>
+    <p class="sub">Wind-adjusted club selection, carry and total distance</p>
   </header>
 
   <section class="card">
-    <div class="section-title">Slaget</div>
+    <div class="section-title">Shot</div>
+
     <div class="grid">
       <div>
-        <label for="dist">Avstånd till flagga</label>
-        <input id="dist" type="number" min="20" max="300" step="1" value="135">
+        <label for="dist">Distance to target</label>
+        <input id="dist" type="number" min="20" max="400" step="1" value="135">
       </div>
       <div>
-        <label for="wind">Vindstyrka (m/s)</label>
+        <label for="wind">Wind speed (m/s)</label>
         <input id="wind" type="number" min="0" max="30" step="0.5" value="10">
       </div>
     </div>
 
-    <label>Slagform</label>
+    <label>Distance unit</label>
     <div class="seg">
-      <button id="straightBtn" class="active" type="button">Rak</button>
+      <button id="metresBtn" class="active" type="button">Metres</button>
+      <button id="yardsBtn" type="button">Yards</button>
+    </div>
+
+    <label>Club selection based on</label>
+    <div class="seg">
+      <button id="carryBtn" class="active" type="button">Carry</button>
+      <button id="totalBtn" type="button">Including roll</button>
+    </div>
+
+    <label>Shot shape</label>
+    <div class="seg">
+      <button id="straightBtn" class="active" type="button">Straight</button>
       <button id="fadeBtn" type="button">Fade</button>
     </div>
   </section>
 
   <section class="card">
-    <div class="section-title">Vindriktning</div>
+    <div class="section-title">Wind direction</div>
     <div class="windread">
-      <span class="muted">Dra pilen med fingret</span>
+      <span class="muted">Drag the arrow</span>
       <strong id="deg">180°</strong>
     </div>
 
     <div class="dial-wrap">
       <div class="dial" id="dial">
-        <div class="mark top">MED</div>
-        <div class="mark right">H</div>
-        <div class="mark bottom">MOT</div>
-        <div class="mark left">V</div>
+        <div class="mark top">TAIL</div>
+        <div class="mark right">R</div>
+        <div class="mark bottom">HEAD</div>
+        <div class="mark left">L</div>
         <div class="arrow" id="arrow"></div>
         <div class="hub"></div>
       </div>
     </div>
 
-    <div class="direction-text" id="dirText">Motvind</div>
+    <div class="direction-text" id="dirText">Headwind</div>
     <input id="dir" type="range" min="0" max="359" step="1" value="180">
   </section>
 
   <section class="card result" aria-live="polite">
-    <div class="muted">Föreslagen klubba</div>
-    <div class="big" id="club">7i</div>
+    <div class="muted">Recommended club</div>
+    <div class="big" id="club">6i</div>
     <div id="summary"></div>
     <div class="muted" id="gap"></div>
     <div class="muted" id="side"></div>
   </section>
 
   <section class="card">
-    <div class="section-title">Alla klubbor</div>
+    <div class="section-title">All clubs</div>
     <table>
       <thead>
-        <tr><th>Klubba</th><th>Carry</th><th>Totalt</th><th>Diff</th></tr>
+        <tr>
+          <th>Club</th>
+          <th>Carry</th>
+          <th>Total</th>
+          <th>Diff</th>
+        </tr>
       </thead>
       <tbody id="rows"></tbody>
     </table>
@@ -149,157 +180,249 @@
 
   <section class="card">
     <details>
-      <summary>Egna klubblängder</summary>
+      <summary>My club distances</summary>
       <div id="clubSettings" style="margin-top:12px"></div>
-      <button class="small-btn" id="resetBtn" type="button" style="margin-top:8px">Återställ standardvärden</button>
+      <div class="unit-note">Carry distances are saved on this device.</div>
+      <button class="small-btn" id="resetBtn" type="button" style="margin-top:10px">Reset to default distances</button>
     </details>
   </section>
 
   <section class="card">
-    <div class="section-title">Modellen</div>
+    <div class="section-title">Model</div>
     <p class="footer-note">
-      Praktisk uppskattning baserad på dina grundlängder. Motvind påverkar mer än medvind,
-      sidvind påverkar främst riktningen och fade räknas som ungefär 3 % kortare carry i vindstilla.
-      Verkligt resultat påverkas av bland annat bollhastighet, launch, spinn, temperatur, bolltyp och vindbyar.
+      This is a practical estimate based on your baseline club distances.
+      Headwind has a greater effect than tailwind, crosswind mainly affects direction,
+      and fade is modelled as approximately 3% shorter carry in calm conditions.
+      Actual results vary with ball speed, launch, spin, temperature, ball type and gusts.
     </p>
   </section>
+
+  <footer class="creator-footer">Created by Camilla Remstedt, 2026</footer>
 </main>
 
 <script>
-const defaultClubs=[
-  {n:"PW",c:100,r:8},
-  {n:"9i",c:115,r:9},
-  {n:"8i",c:125,r:10},
-  {n:"7i",c:135,r:11},
-  {n:"6i",c:145,r:12}
+const M_TO_YD = 1.0936133;
+
+const defaultClubsM = [
+  {n:"PW", c:100, r:8},
+  {n:"9i", c:115, r:9},
+  {n:"8i", c:125, r:10},
+  {n:"7i", c:135, r:11},
+  {n:"6i", c:145, r:12}
 ];
 
-let clubs=JSON.parse(localStorage.getItem("golfvind-clubs")||"null") || structuredClone(defaultClubs);
-let shape=localStorage.getItem("golfvind-shape") || "Rak";
+const cloneDefaults = () => JSON.parse(JSON.stringify(defaultClubsM));
+const $ = id => document.getElementById(id);
 
-const $=id=>document.getElementById(id);
+let clubsM = JSON.parse(localStorage.getItem("golfwind-clubs-m-v2") || "null") || cloneDefaults();
+let unit = localStorage.getItem("golfwind-unit-v2") || "m";
+let selectionMode = localStorage.getItem("golfwind-selection-v2") || "carry";
+let shape = localStorage.getItem("golfwind-shape-v2") || "Straight";
 
-function directionDescription(d){
-  if(d<23||d>=338) return "Medvind";
-  if(d<68) return "Medvind från vänster";
-  if(d<113) return "Sidvind från vänster";
-  if(d<158) return "Motvind från vänster";
-  if(d<203) return "Motvind";
-  if(d<248) return "Motvind från höger";
-  if(d<293) return "Sidvind från höger";
-  return "Medvind från höger";
+function toDisplay(m){ return unit === "yd" ? m * M_TO_YD : m; }
+function fromDisplay(v){ return unit === "yd" ? v / M_TO_YD : v; }
+function unitLabel(){ return unit === "yd" ? "yd" : "m"; }
+
+function setButtonState(){
+  $("metresBtn").classList.toggle("active", unit==="m");
+  $("yardsBtn").classList.toggle("active", unit==="yd");
+  $("carryBtn").classList.toggle("active", selectionMode==="carry");
+  $("totalBtn").classList.toggle("active", selectionMode==="total");
+  $("straightBtn").classList.toggle("active", shape==="Straight");
+  $("fadeBtn").classList.toggle("active", shape==="Fade");
 }
 
-function setShape(s){
-  shape=s;
-  localStorage.setItem("golfvind-shape",s);
-  $("straightBtn").classList.toggle("active",s==="Rak");
-  $("fadeBtn").classList.toggle("active",s==="Fade");
+function directionDescription(d){
+  if(d<23 || d>=338) return "Tailwind";
+  if(d<68) return "Tailwind from the left";
+  if(d<113) return "Crosswind from the left";
+  if(d<158) return "Headwind from the left";
+  if(d<203) return "Headwind";
+  if(d<248) return "Headwind from the right";
+  if(d<293) return "Crosswind from the right";
+  return "Tailwind from the right";
+}
+
+function changeUnit(newUnit){
+  if(newUnit === unit) return;
+  const currentTarget = Number($("dist").value) || 0;
+  const metres = fromDisplay(currentTarget);
+  unit = newUnit;
+  localStorage.setItem("golfwind-unit-v2", unit);
+  $("dist").value = Math.round(toDisplay(metres));
+  setButtonState();
+  renderClubSettings();
+  calc();
+}
+
+function setSelectionMode(mode){
+  selectionMode = mode;
+  localStorage.setItem("golfwind-selection-v2", mode);
+  setButtonState();
+  calc();
+}
+
+function setShape(newShape){
+  shape = newShape;
+  localStorage.setItem("golfwind-shape-v2", newShape);
+  setButtonState();
   calc();
 }
 
 function calc(){
-  const d=Math.max(20,Math.min(300,Number($("dist").value)||135));
-  const w=Math.max(0,Math.min(30,Number($("wind").value)||0));
-  const deg=Number($("dir").value)||0;
-  const rad=deg*Math.PI/180;
-  const along=w*Math.cos(rad);
-  const cross=w*Math.sin(rad);
+  const targetDisplay = Math.max(20, Number($("dist").value) || 135);
+  const targetM = fromDisplay(targetDisplay);
+  const w = Math.max(0, Math.min(30, Number($("wind").value) || 0));
+  const deg = Number($("dir").value) || 0;
+  const rad = deg * Math.PI / 180;
 
-  const results=clubs.map(x=>{
-    let cf=1;
-    if(along>=0) cf+=0.006*along;
-    else cf+=0.013*along;
-    cf-=0.002*Math.abs(cross);
-    if(shape==="Fade") cf-=0.03;
+  const along = w * Math.cos(rad);
+  const cross = w * Math.sin(rad);
 
-    const carry=Math.max(0,x.c*cf);
+  const results = clubsM.map(x => {
+    let cf = 1;
 
-    let rf=1;
-    if(along>0) rf+=0.016*along;
-    else if(along<0) rf=Math.max(0.35,1+0.023*along);
-    if(Math.abs(cross)>0.1) rf*=0.98;
+    if(along >= 0) cf += 0.006 * along;
+    else cf += 0.013 * along;
 
-    const roll=Math.max(0,x.r*rf);
-    const total=carry+roll;
+    cf -= 0.002 * Math.abs(cross);
 
-    let lateral=cross*(carry/100)*0.85;
-    if(shape==="Fade"){
-      lateral+=carry*0.06;
-      if(cross>0) lateral+=cross*(carry/100)*0.25;
+    if(shape === "Fade") cf -= 0.03;
+
+    const carryM = Math.max(0, x.c * cf);
+
+    let rf = 1;
+    if(along > 0) rf += 0.016 * along;
+    else if(along < 0) rf = Math.max(0.35, 1 + 0.023 * along);
+    if(Math.abs(cross) > 0.1) rf *= 0.98;
+
+    const rollM = Math.max(0, x.r * rf);
+    const totalM = carryM + rollM;
+
+    let lateralM = cross * (carryM / 100) * 0.85;
+    if(shape === "Fade"){
+      lateralM += carryM * 0.06;
+      if(cross > 0) lateralM += cross * (carryM / 100) * 0.25;
     }
 
-    return {...x,carry,roll,total,diff:total-d,lateral};
+    const selectionDistanceM = selectionMode === "carry" ? carryM : totalM;
+    const diffM = selectionDistanceM - targetM;
+
+    return {...x, carryM, rollM, totalM, lateralM, diffM, selectionDistanceM};
   });
 
-  const best=results.reduce((a,b)=>Math.abs(a.diff)<Math.abs(b.diff)?a:b);
-  $("club").textContent=best.n;
-  $("summary").textContent=`${best.carry.toFixed(0)} m carry • ${best.total.toFixed(0)} m totalt`;
-  $("gap").textContent=best.diff>=0?`${best.diff.toFixed(0)} m förbi flaggan`:`${Math.abs(best.diff).toFixed(0)} m kort om flaggan`;
-  $("side").textContent=Math.abs(best.lateral)>=1?`Sidled: ca ${Math.abs(best.lateral).toFixed(0)} m ${best.lateral>0?"höger":"vänster"}`:"";
+  const best = results.reduce((a,b) =>
+    Math.abs(a.diffM) < Math.abs(b.diffM) ? a : b
+  );
 
-  $("rows").innerHTML=results.map(x=>`<tr class="${x.n===best.n?'best':''}">
-    <td>${x.n}</td>
-    <td>${x.carry.toFixed(0)} m</td>
-    <td>${x.total.toFixed(0)} m</td>
-    <td>${x.diff>=0?'+':''}${x.diff.toFixed(0)} m</td>
-  </tr>`).join("");
+  const u = unitLabel();
+  const carryD = toDisplay(best.carryM);
+  const totalD = toDisplay(best.totalM);
+  const diffD = toDisplay(best.diffM);
+  const lateralD = toDisplay(best.lateralM);
 
-  $("deg").textContent=`${deg}°`;
-  $("dirText").textContent=directionDescription(deg);
-  $("arrow").style.transform=`translate(-50%,-100%) rotate(${deg}deg)`;
+  $("club").textContent = best.n;
+  $("summary").textContent =
+    `${carryD.toFixed(0)} ${u} carry • ${totalD.toFixed(0)} ${u} total`;
+
+  if(Math.abs(diffD) < 0.5){
+    $("gap").textContent = `On target based on ${selectionMode === "carry" ? "carry" : "including roll"}`;
+  } else {
+    $("gap").textContent =
+      diffD > 0
+        ? `${Math.abs(diffD).toFixed(0)} ${u} long based on ${selectionMode === "carry" ? "carry" : "including roll"}`
+        : `${Math.abs(diffD).toFixed(0)} ${u} short based on ${selectionMode === "carry" ? "carry" : "including roll"}`;
+  }
+
+  $("side").textContent =
+    Math.abs(lateralD) >= 1
+      ? `Lateral movement: approx. ${Math.abs(lateralD).toFixed(0)} ${u} ${lateralD > 0 ? "right" : "left"}`
+      : "";
+
+  $("rows").innerHTML = results.map(x => {
+    const carry = toDisplay(x.carryM);
+    const total = toDisplay(x.totalM);
+    const diff = toDisplay(x.diffM);
+    return `<tr class="${x.n===best.n?'best':''}">
+      <td>${x.n}</td>
+      <td>${carry.toFixed(0)} ${u}</td>
+      <td>${total.toFixed(0)} ${u}</td>
+      <td>${diff>=0?'+':''}${diff.toFixed(0)} ${u}</td>
+    </tr>`;
+  }).join("");
+
+  $("deg").textContent = `${deg}°`;
+  $("dirText").textContent = directionDescription(deg);
+  $("arrow").style.transform = `translate(-50%,-100%) rotate(${deg}deg)`;
 }
 
 function renderClubSettings(){
-  $("clubSettings").innerHTML=clubs.map((x,i)=>`
+  const u = unitLabel();
+
+  $("clubSettings").innerHTML = clubsM.map((x,i) => `
     <div class="settings-row">
       <strong>${x.n}</strong>
-      <input data-i="${i}" data-k="c" type="number" min="20" max="300" step="1" value="${x.c}">
-      <span>m carry</span>
-    </div>`).join("");
+      <input data-i="${i}" type="number" min="20" max="400" step="1"
+             value="${Math.round(toDisplay(x.c))}">
+      <span>${u} carry</span>
+    </div>
+  `).join("");
 
-  $("clubSettings").querySelectorAll("input").forEach(inp=>{
-    inp.addEventListener("input",()=>{
-      const i=Number(inp.dataset.i);
-      clubs[i].c=Number(inp.value)||clubs[i].c;
-      localStorage.setItem("golfvind-clubs",JSON.stringify(clubs));
-      calc();
+  $("clubSettings").querySelectorAll("input").forEach(inp => {
+    inp.addEventListener("input", () => {
+      const i = Number(inp.dataset.i);
+      const displayed = Number(inp.value);
+      if(Number.isFinite(displayed) && displayed > 0){
+        clubsM[i].c = fromDisplay(displayed);
+        localStorage.setItem("golfwind-clubs-m-v2", JSON.stringify(clubsM));
+        calc();
+      }
     });
   });
 }
 
-$("straightBtn").addEventListener("click",()=>setShape("Rak"));
+$("metresBtn").addEventListener("click",()=>changeUnit("m"));
+$("yardsBtn").addEventListener("click",()=>changeUnit("yd"));
+$("carryBtn").addEventListener("click",()=>setSelectionMode("carry"));
+$("totalBtn").addEventListener("click",()=>setSelectionMode("total"));
+$("straightBtn").addEventListener("click",()=>setShape("Straight"));
 $("fadeBtn").addEventListener("click",()=>setShape("Fade"));
-["dist","wind","dir"].forEach(id=>$(id).addEventListener("input",calc));
+
+["dist","wind","dir"].forEach(id => $(id).addEventListener("input", calc));
 
 $("resetBtn").addEventListener("click",()=>{
-  clubs=structuredClone(defaultClubs);
-  localStorage.setItem("golfvind-clubs",JSON.stringify(clubs));
+  clubsM = cloneDefaults();
+  localStorage.setItem("golfwind-clubs-m-v2", JSON.stringify(clubsM));
   renderClubSettings();
   calc();
 });
 
-const dial=$("dial");
-function setAngleFromPointer(clientX,clientY){
-  const rect=dial.getBoundingClientRect();
-  const cx=rect.left+rect.width/2;
-  const cy=rect.top+rect.height/2;
-  const dx=clientX-cx;
-  const dy=clientY-cy;
-  let deg=Math.atan2(dx,-dy)*180/Math.PI;
-  if(deg<0) deg+=360;
-  $("dir").value=Math.round(deg);
+const dial = $("dial");
+
+function setAngleFromPointer(clientX, clientY){
+  const rect = dial.getBoundingClientRect();
+  const cx = rect.left + rect.width/2;
+  const cy = rect.top + rect.height/2;
+  const dx = clientX - cx;
+  const dy = clientY - cy;
+
+  let deg = Math.atan2(dx, -dy) * 180 / Math.PI;
+  if(deg < 0) deg += 360;
+
+  $("dir").value = Math.round(deg);
   calc();
 }
-dial.addEventListener("pointerdown",e=>{
+
+dial.addEventListener("pointerdown", e => {
   dial.setPointerCapture(e.pointerId);
   setAngleFromPointer(e.clientX,e.clientY);
 });
-dial.addEventListener("pointermove",e=>{
+
+dial.addEventListener("pointermove", e => {
   if(e.buttons) setAngleFromPointer(e.clientX,e.clientY);
 });
 
-setShape(shape);
+setButtonState();
 renderClubSettings();
 calc();
 
