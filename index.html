@@ -47,11 +47,6 @@
     .current-wind-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
     .current-wind-info{min-width:0}
     .current-wind-actions{display:flex;flex-direction:column;align-items:center;gap:12px}
-    .auto-wind-dial{width:clamp(94px,27vw,112px);height:auto;flex:none;display:block;color:#171e19}
-    .auto-wind-dial .cardinal-label{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;font-size:15px;font-weight:600;fill:currentColor;text-anchor:middle}
-    .auto-wind-dial .cardinal-point,.auto-wind-dial .wind-needle{fill:currentColor}
-    .auto-wind-dial .needle-hub{fill:#fff;stroke:currentColor;stroke-width:4}
-    .auto-wind-dial .needle-centre{fill:currentColor}
     .dial-wrap{display:flex;justify-content:center;padding:6px 0}
     .dial{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%);border:1px solid #d3dcd6;touch-action:none;user-select:none}
     .dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:800}
@@ -59,6 +54,11 @@
     .arrow{position:absolute;left:50%;top:50%;width:5px;height:45px;background:var(--green);border-radius:6px;transform-origin:50% 100%;transform:translate(-50%,-100%) rotate(180deg)}
     .arrow:before{content:"";position:absolute;left:50%;top:-9px;transform:translateX(-50%);border-left:8px solid transparent;border-right:8px solid transparent;border-bottom:14px solid var(--green)}
     .hub{position:absolute;left:50%;top:50%;width:14px;height:14px;border-radius:50%;background:#fff;border:4px solid var(--green);transform:translate(-50%,-50%)}
+    .auto-wind-dial{width:clamp(88px,25vw,104px);height:clamp(88px,25vw,104px);flex:none;touch-action:auto}
+    .auto-wind-dial .mark.top{top:5px}.auto-wind-dial .mark.right{right:5px}.auto-wind-dial .mark.bottom{bottom:5px}.auto-wind-dial .mark.left{left:5px}
+    .auto-wind-dial .arrow{width:4px;height:32%;pointer-events:none}
+    .auto-wind-dial .arrow:before{top:-6px;border-left-width:6px;border-right-width:6px;border-bottom-width:10px}
+    .auto-wind-dial .hub{width:11px;height:11px;border-width:3px;pointer-events:none}
     .direction-text{font-weight:800;margin-top:8px;font-size:14px}.component-text{font-size:11px;color:var(--muted);line-height:1.45;margin-top:3px}
     .result{background:var(--green2);border-color:#cddfcf}.big{font-size:44px;font-weight:800;letter-spacing:-1px;margin:2px 0}
     .result #summary{font-size:14px;font-weight:600}.result .muted{font-size:11px}
@@ -120,21 +120,14 @@
             </div>
             <div class="current-wind-actions">
               <button class="small-btn" id="refreshWeather" type="button">Refresh</button>
-              <svg id="autoWindDial" class="auto-wind-dial" viewBox="0 0 160 160" role="img" aria-label="Waiting for wind and shot direction" xmlns="http://www.w3.org/2000/svg">
-                <text class="cardinal-label" x="80" y="16">TAIL</text>
-                <path class="cardinal-point" d="M80 26 74 42 86 42Z"/>
-                <text class="cardinal-label" x="149" y="85">R</text>
-                <path class="cardinal-point" d="M134 80 117 74 117 86Z"/>
-                <text class="cardinal-label" x="80" y="155">HEAD</text>
-                <path class="cardinal-point" d="M80 134 74 118 86 118Z"/>
-                <text class="cardinal-label" x="11" y="85">L</text>
-                <path class="cardinal-point" d="M26 80 43 74 43 86Z"/>
-                <g id="autoWindArrow" class="hidden">
-                  <path class="wind-needle" d="M80 45 91 81 80 90 69 81Z"/>
-                </g>
-                <circle class="needle-hub" cx="80" cy="80" r="9"/>
-                <circle class="needle-centre" cx="80" cy="80" r="3"/>
-              </svg>
+              <div id="autoWindDial" class="dial auto-wind-dial" role="img" aria-label="Waiting for wind and shot direction">
+                <div class="mark top" aria-hidden="true">TAIL</div>
+                <div class="mark right" aria-hidden="true">R</div>
+                <div class="mark bottom" aria-hidden="true">HEAD</div>
+                <div class="mark left" aria-hidden="true">L</div>
+                <div class="arrow hidden" id="autoWindArrow" aria-hidden="true"></div>
+                <div class="hub" aria-hidden="true"></div>
+              </div>
             </div>
           </div>
         </div>
@@ -207,7 +200,7 @@
       affects direction. Club estimates assume a straight shot.
     </p>
     <div class="between" style="margin-top:12px">
-      <span class="muted">Version 5.13</span>
+      <span class="muted">Version 5.14</span>
       <button class="small-btn" id="updateBtn" type="button">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
@@ -354,7 +347,7 @@ function updateAutoWindDial(){
     return;
   }
   const angle=norm360(Math.atan2(comps.cross,comps.along)*180/Math.PI);
-  arrow.setAttribute("transform",`rotate(${angle} 80 80)`);
+  arrow.style.transform=`translate(-50%,-100%) rotate(${angle}deg)`;
   arrow.classList.remove("hidden");
   dial.setAttribute("aria-label",directionDescriptionFromComponents(comps.along,comps.cross));
 }
