@@ -76,6 +76,7 @@
     .club-legend{display:flex;flex-wrap:wrap;gap:5px;margin:10px 0 2px}.club-legend span{font-size:10px;font-weight:700;border-radius:6px;padding:4px 6px;border:1px solid}#clubSettings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.settings-row{min-width:0;border:1px solid;border-radius:9px;padding:7px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.club-woods{background:#edf3f7;border-color:#cddde8}.club-irons{background:#edf6ef;border-color:#d0e3d2}.club-wedges{background:#faf3e8;border-color:#ebddc7}.settings-row strong{grid-column:1 / -1;font-size:12px;overflow-wrap:anywhere}.settings-row label{min-width:0;margin:0;font-size:10px}.settings-row input{width:100%;padding:6px 4px;font-size:16px}.settings-row .remove-club{grid-column:1 / -1;justify-self:end}.add-club-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.add-club-fields label{margin:0}.add-club-fields input,.add-club-fields select{width:100%;padding:8px;font:inherit;border:1px solid #ccd9ce;border-radius:8px;background:#fff}.add-club-fields .full{grid-column:1 / -1}
     .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:#fff;padding:9px 4px}
     .how-it-works .footer-note{font-size:15px;line-height:1.55;font-weight:500;color:#27382e}.model-steps{padding-left:23px;margin:12px 0;color:#27382e;font-size:15px;font-weight:500;line-height:1.55}.model-steps li{margin:10px 0}
+    .feedback-form{padding-top:8px}.feedback-form label{font-size:13px}.feedback-form select,.feedback-form textarea{width:100%;font-size:15px;font-weight:500;line-height:1.45;color:#1a271e;background:#fff;border:1px solid #ccd9ce;border-radius:9px;padding:9px}.feedback-form textarea{min-height:104px;resize:vertical}.feedback-form .btn{margin-top:10px;padding:10px 14px;font-size:13px}
     .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
     .wind-section{padding-top:10px;font-weight:600}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
     .wind-section .muted,.wind-section .component-text,.wind-section label,.wind-section .error{font-size:12px;font-weight:600}
@@ -231,10 +232,24 @@
     </ol>
     <p class="footer-note" data-i18n="modelCaveat">Distances are estimates for straight shots. Wind on the course may differ from the forecast because of trees, terrain and gusts.</p>
     <div class="between" style="margin-top:12px">
-      <span class="muted" data-i18n="version">Version 5.30</span>
+      <span class="muted" data-i18n="version">Version 5.31</span>
       <button class="small-btn" id="updateBtn" type="button" data-i18n="checkUpdates">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
+    </details>
+  </section>
+
+  <section class="card">
+    <details>
+      <summary><strong data-i18n="feedbackTitle">Give feedback</strong></summary>
+      <form id="feedbackForm" class="feedback-form">
+        <label for="feedbackType" data-i18n="feedbackKind">What is your feedback about?</label>
+        <select id="feedbackType"><option value="suggestion" data-i18n="feedbackSuggestion">Suggestion</option><option value="problem" data-i18n="feedbackProblem">Problem</option></select>
+        <label for="feedbackMessage" data-i18n="feedbackMessageLabel">Your feedback</label>
+        <textarea id="feedbackMessage" required maxlength="2000" data-i18n-placeholder="feedbackPlaceholder" placeholder="Tell us what you think"></textarea>
+        <button class="btn primary" type="submit" data-i18n="feedbackSend">Open email to send</button>
+        <p class="muted" data-i18n="feedbackHint">Your email app opens with a draft to info@gdop.se. Check it and press Send there.</p>
+      </form>
     </details>
   </section>
 
@@ -280,7 +295,8 @@ const translations={
     relativeDirection:"Relative wind direction",dragArrow:"Drag the arrow",allClubs:"My Bag",
     club:"Club",diff:"Diff",myDistances:"Edit: My bag",woodsGroup:"Woods & hybrids",ironsGroup:"Irons",wedgesGroup:"Wedges °",resetDistances:"Reset to default distances",addClub:"+ Add club",clubType:"Club type",chooseClub:"Choose a club",customClub:"Other",clubName:"Club name",roll:"Roll",saveClub:"Save club",cancel:"Cancel",removeClub:"Remove club",duplicateClub:"That club is already in your list.",invalidClub:"Enter a club name, carry (1–400) and roll (0–100).",
     model:"How it works",modelIntro:"My Caddie helps you choose a club based on the distance to your target, wind direction and speed, and whether the green is uphill or downhill.",modelStep1:"Open Edit: My bag. Check the prefilled carry and roll distances and adjust them to match your clubs.",modelStep2:"Open Wind and tap Use my location. Tap Enable live direction the first time you use this feature. Then point the top of your phone towards the target. The app detects your shot direction and estimates how the wind affects your club choice.",modelStep3Title:"Slope Compensation:",modelStep3:"Enter the elevation difference to the green if it is uphill or downhill.",modelStep4Title:"Add to Home Screen:",modelStep4:"Open the app link in Safari on your iPhone, tap the Share button and select Add to Home Screen. You can then open My Caddie directly from your Home Screen.",modelCaveat:"Distances are estimates for straight shots. Wind on the course may differ from the forecast because of trees, terrain and gusts.",
-    version:"Version 5.30",checkUpdates:"Check for updates",credit:"Created by Camilla Remstedt, 2026",
+    feedbackTitle:"Give feedback",feedbackKind:"What is your feedback about?",feedbackSuggestion:"Suggestion",feedbackProblem:"Problem",feedbackMessageLabel:"Your feedback",feedbackPlaceholder:"Tell us what you think",feedbackSend:"Open email to send",feedbackHint:"Your email app opens with a draft to info@gdop.se. Check it and press Send there.",feedbackSubject:"My Caddie feedback",
+    version:"Version 5.31",checkUpdates:"Check for updates",credit:"Created by Camilla Remstedt, 2026",
     competition:"Competition",practice:"Practice",competitionSubtitle:"Distance-based club choice and forecast wind",competitionPreview:"Based on saved carry distances, without wind or slope adjustment.",
     competitionNote:"Competition shows a club for the entered distance based on your saved carry distances, without wind or slope compensation. Check the event's rules before using club advice during a round.",
     decreaseElevation:"Decrease elevation",increaseElevation:"Increase elevation",elevationMetres:"Elevation in metres",
@@ -318,7 +334,8 @@ const translations={
     relativeDirection:"Vindriktning relativt slaget",dragArrow:"Dra pilen",allClubs:"Min Bag",
     club:"Klubba",diff:"Skillnad",myDistances:"Ändra: Min Bag",woodsGroup:"Woods och hybrider",ironsGroup:"Järnklubbor",wedgesGroup:"Wedgar °",resetDistances:"Återställ standardlängder",addClub:"+ Lägg till klubba",clubType:"Klubbtyp",chooseClub:"Välj klubba",customClub:"Annan",clubName:"Klubbnamn",roll:"Rull",saveClub:"Spara klubba",cancel:"Avbryt",removeClub:"Ta bort klubba",duplicateClub:"Klubban finns redan i listan.",invalidClub:"Ange klubbnamn, carry (1–400) och rull (0–100).",
     model:"Så fungerar appen",modelIntro:"My Caddie hjälper dig att välja klubba utifrån avståndet till målet, vindens riktning och styrka samt om greenen ligger uppför eller nedför.",modelStep1:"Öppna Ändra: Min Bag. Kontrollera de förifyllda värdena för carry och rull och ändra dem så att de stämmer med dina klubbor.",modelStep2:"Öppna Vind och tryck på Använd min plats. Tryck på Aktivera riktning första gången du använder funktionen. Rikta sedan telefonens ovansida mot målet. Appen läser av slagriktningen och beräknar hur vinden påverkar klubbvalet.",modelStep3Title:"Lutningskompensation / Slope:",modelStep3:"Här anger du höjdskillnaden till greenen om den ligger uppför eller nedför.",modelStep4Title:"Lägg till på hemskärmen:",modelStep4:"Öppna appens länk i Safari på din iPhone, tryck på dela-knappen och välj Lägg till på hemskärmen. Då kan du öppna My Caddie direkt från hemskärmen.",modelCaveat:"Avstånden är uppskattningar för raka slag. Vinden på banan kan skilja sig från prognosen på grund av träd, terräng och vindbyar.",
-    version:"Version 5.30",checkUpdates:"Sök uppdatering",credit:"Skapad av Camilla Remstedt, 2026",
+    feedbackTitle:"Ge feedback",feedbackKind:"Vad gäller din feedback?",feedbackSuggestion:"Förslag",feedbackProblem:"Problem",feedbackMessageLabel:"Din feedback",feedbackPlaceholder:"Berätta vad du tycker",feedbackSend:"Öppna mejl för att skicka",feedbackHint:"Din mejlapp öppnas med ett utkast till info@gdop.se. Kontrollera det och tryck på Skicka där.",feedbackSubject:"Feedback om My Caddie",
+    version:"Version 5.31",checkUpdates:"Sök uppdatering",credit:"Skapad av Camilla Remstedt, 2026",
     competition:"Tävling",practice:"Träning",competitionSubtitle:"Klubbval för avstånd och väderprognos",competitionPreview:"Utifrån sparade carrylängder, utan justering för vind eller höjdskillnad.",
     competitionNote:"Tävling visar en klubba för angivet avstånd utifrån dina sparade carrylängder, utan vind- eller höjdkompensation. Kontrollera tävlingens regler innan du använder klubbråd under ronden.",
     decreaseElevation:"Minska höjdskillnaden",increaseElevation:"Öka höjdskillnaden",elevationMetres:"Höjdskillnad i meter",
@@ -368,6 +385,7 @@ function applyLanguage(){
   document.documentElement.lang=lang;
   document.title=t("appTitle");
   document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n);});
+  $("feedbackMessage").placeholder=t("feedbackPlaceholder");
   setButtons();
   $("langSv").setAttribute("aria-pressed",String(lang==="sv"));
   $("langEn").setAttribute("aria-pressed",String(lang==="en"));
@@ -905,6 +923,16 @@ $("addClubForm").addEventListener("submit",event=>{
   localStorage.setItem("gsc-clubs-v4",JSON.stringify(clubsM));
   $("addClubForm").reset();
   showAddClub(false);renderClubSettings();calc();
+});
+
+$("feedbackForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  const message=$("feedbackMessage").value.trim();
+  if(!message) return;
+  const kind=$("feedbackType").value==="problem"?t("feedbackProblem"):t("feedbackSuggestion");
+  const subject=`${t("feedbackSubject")} - ${kind}`;
+  const body=`${t("feedbackKind")} ${kind}\n\n${message}`;
+  window.location.href=`mailto:info@gdop.se?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
 });
 
 $("resetBtn").addEventListener("click",()=>{
