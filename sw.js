@@ -1,4 +1,4 @@
-const CACHE="golf-shot-calculator-v5-17";
+const CACHE="golf-shot-calculator-v5-18";
 const ASSETS=["./","./index.html","./manifest.webmanifest","./logo-green.svg","./icon-180.png","./icon-192.png","./icon-512.png"];
 self.addEventListener("install",event=>{
   event.waitUntil(caches.open(CACHE).then(cache=>cache.addAll(ASSETS.map(path=>new Request(path,{cache:"reload"})))));
