@@ -34,7 +34,7 @@
     .muted{color:var(--muted);font-size:11px;line-height:1.35}
     .preview{background:var(--green2)!important}
     .preview-body{display:flex;justify-content:space-between;gap:3px;align-items:center}
-    .preview .big{font-size:clamp(36px,10vw,53px);line-height:1}
+    .preview .big{font-size:clamp(36px,10vw,53px);line-height:1;min-width:0;overflow-wrap:anywhere}.preview .big.long-club{font-size:clamp(16px,4vw,25px)}
     .preview-stat{font-size:clamp(10px,2.8vw,14px);line-height:1.3;text-align:right;white-space:nowrap}
     .preview-gap{font-size:11px;margin-top:5px}
     .top-grid .preview .inline-unit{margin-top:auto}
@@ -74,7 +74,7 @@
     .result{background:var(--green2);border-color:#cddfcf}.big{font-size:44px;font-weight:800;letter-spacing:-1px;margin:2px 0}
     .result #summary{font-size:14px;font-weight:600}.result .muted{font-size:11px}
     table{width:100%;border-collapse:collapse;font-size:12px}th,td{padding:8px 4px;border-bottom:1px solid #e6ebe7;text-align:right;white-space:nowrap}th:first-child,td:first-child{text-align:left}tr.best{font-weight:800;background:#f4f9f5}
-    .settings-row{display:grid;grid-template-columns:44px 1fr 57px;gap:8px;align-items:center;margin:8px 0}.settings-row input{padding:10px;font-size:16px}
+    #clubSettings{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:7px}.settings-row{min-width:0;border:1px solid #d9e5dc;border-radius:9px;padding:7px;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:4px}.settings-row strong{grid-column:1 / -1;font-size:12px;overflow-wrap:anywhere}.settings-row label{min-width:0;margin:0;font-size:10px}.settings-row input{width:100%;padding:6px 4px;font-size:16px}.settings-row .remove-club{grid-column:1 / -1;justify-self:end}.add-club-fields{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}.add-club-fields label{margin:0}.add-club-fields input,.add-club-fields select{width:100%;padding:8px;font:inherit;border:1px solid #ccd9ce;border-radius:8px;background:#fff}.add-club-fields .full{grid-column:1 / -1}
     .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:#fff;padding:9px 4px}
     .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
     .wind-section{padding-top:10px;font-weight:600}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
@@ -203,6 +203,17 @@
     <details>
       <summary><strong data-i18n="myDistances">My club distances</strong></summary>
       <div id="clubSettings" style="margin-top:12px"></div>
+      <button class="small-btn" id="addClubBtn" type="button" aria-expanded="false" aria-controls="addClubForm" data-i18n="addClub">+ Add club</button>
+      <form id="addClubForm" class="hidden">
+        <div class="add-club-fields">
+          <label class="full"><span data-i18n="clubType">Club type</span><select id="newClubType"><option value="" data-i18n="chooseClub">Choose a club</option><option>Driver</option><option>3W</option><option>5W</option><option>7W</option><option>3H</option><option>4H</option><option>5H</option><option>AW</option><option>GW</option><option>SW</option><option>LW</option><option value="custom" data-i18n="customClub">Other</option></select></label>
+          <label class="full"><span data-i18n="clubName">Club name</span><input id="newClubName" type="text" maxlength="20" required autocomplete="off" placeholder="e.g. 5W / SW"></label>
+          <label><span data-i18n="carry">Carry</span><input id="newClubCarry" type="number" min="1" max="400" step="1" required inputmode="numeric"></label>
+          <label><span data-i18n="roll">Roll</span><input id="newClubRoll" type="number" min="0" max="100" step="1" value="0" required inputmode="numeric"></label>
+          <button class="small-btn" type="submit" data-i18n="saveClub">Save club</button><button class="small-btn" id="cancelClubBtn" type="button" data-i18n="cancel">Cancel</button>
+        </div>
+        <div id="clubFormError" class="error" role="alert"></div>
+      </form>
       <button class="small-btn" id="resetBtn" type="button" style="margin-top:10px" data-i18n="resetDistances">Reset to default distances</button>
     </details>
   </section>
@@ -216,7 +227,7 @@
       affects direction. Club estimates assume a straight shot.
     </p>
     <div class="between" style="margin-top:12px">
-      <span class="muted" data-i18n="version">Version 5.18</span>
+      <span class="muted" data-i18n="version">Version 5.20</span>
       <button class="small-btn" id="updateBtn" type="button" data-i18n="checkUpdates">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
@@ -229,11 +240,23 @@
 const M_TO_YD = 1.0936133;
 
 const defaultClubsM = [
-  {n:"PW",c:100,r:8},
-  {n:"9i",c:115,r:9},
-  {n:"8i",c:125,r:10},
+  {n:"Driver",c:190,r:0},
+  {n:"3W",c:180,r:0},
+  {n:"7W",c:170,r:0},
+  {n:"5H",c:160,r:0},
+  {n:"6i",c:145,r:12},
   {n:"7i",c:135,r:11},
-  {n:"6i",c:145,r:12}
+  {n:"8i",c:125,r:10},
+  {n:"9i",c:115,r:9},
+  {n:"PW",c:100,r:8},
+  {n:"PW/48° Full",c:90,r:0},
+  {n:"PW/48° Half",c:60,r:0},
+  {n:"GW/52° Full",c:80,r:0},
+  {n:"GW/52° Half",c:50,r:0},
+  {n:"SW/56° Full",c:70,r:0},
+  {n:"SW/56° Half",c:40,r:0},
+  {n:"LW/60° Full",c:60,r:0},
+  {n:"LW/60° Half",c:30,r:0}
 ];
 
 const $ = id => document.getElementById(id);
@@ -250,9 +273,9 @@ const translations={
     aimInstruction:"Point the top of your iPhone towards the target. Direction updates as you turn.",
     enableDirection:"Enable live direction",liveDirection:"Live shot direction",windSpeed:"Wind speed (m/s)",
     relativeDirection:"Relative wind direction",dragArrow:"Drag the arrow",allClubs:"All clubs",
-    club:"Club",diff:"Diff",myDistances:"My club distances",resetDistances:"Reset to default distances",
+    club:"Club",diff:"Diff",myDistances:"My club distances",resetDistances:"Reset to default distances",addClub:"+ Add club",clubType:"Club type",chooseClub:"Choose a club",customClub:"Other",clubName:"Club name",roll:"Roll",saveClub:"Save club",cancel:"Cancel",removeClub:"Remove club",duplicateClub:"That club is already in your list.",invalidClub:"Enter a club name, carry (1–400) and roll (0–100).",
     model:"Model",modelNote:"This is a practical estimate based on your baseline club distances. Live wind uses current 10 m weather-model wind for your GPS position. Course-level wind can differ because of trees, terrain, buildings and gusts. Headwind has a greater effect than tailwind, crosswind mainly affects direction. Club estimates assume a straight shot.",
-    version:"Version 5.18",checkUpdates:"Check for updates",credit:"Created by Camilla Remstedt, 2026",
+    version:"Version 5.20",checkUpdates:"Check for updates",credit:"Created by Camilla Remstedt, 2026",
     competition:"Competition",practice:"Practice",competitionSubtitle:"Distance-based club choice and forecast wind",competitionPreview:"Based on saved carry distances, without wind or slope adjustment.",
     competitionNote:"Competition shows a club for the entered distance based on your saved carry distances, without wind or slope compensation. Check the event's rules before using club advice during a round.",
     decreaseElevation:"Decrease elevation",increaseElevation:"Increase elevation",elevationMetres:"Elevation in metres",
@@ -288,9 +311,9 @@ const translations={
     aimInstruction:"Rikta ovansidan av din iPhone mot målet. Riktningen uppdateras när du vrider telefonen.",
     enableDirection:"Aktivera riktning",liveDirection:"Aktuell slagriktning",windSpeed:"Vindhastighet (m/s)",
     relativeDirection:"Vindriktning relativt slaget",dragArrow:"Dra pilen",allClubs:"Alla klubbor",
-    club:"Klubba",diff:"Skillnad",myDistances:"Mina klubblängder",resetDistances:"Återställ standardlängder",
+    club:"Klubba",diff:"Skillnad",myDistances:"Mina klubblängder",resetDistances:"Återställ standardlängder",addClub:"+ Lägg till klubba",clubType:"Klubbtyp",chooseClub:"Välj klubba",customClub:"Annan",clubName:"Klubbnamn",roll:"Rull",saveClub:"Spara klubba",cancel:"Avbryt",removeClub:"Ta bort klubba",duplicateClub:"Klubban finns redan i listan.",invalidClub:"Ange klubbnamn, carry (1–400) och rull (0–100).",
     model:"Beräkningsmodell",modelNote:"Detta är en praktisk uppskattning utifrån dina klubblängder. Den aktuella vinden hämtas från en vädermodell på 10 m höjd för din GPS-position. Vinden på banan kan skilja sig på grund av träd, terräng, byggnader och vindbyar. Motvind påverkar mer än medvind och sidvind påverkar främst riktningen. Beräkningen förutsätter ett rakt slag.",
-    version:"Version 5.18",checkUpdates:"Sök uppdatering",credit:"Skapad av Camilla Remstedt, 2026",
+    version:"Version 5.20",checkUpdates:"Sök uppdatering",credit:"Skapad av Camilla Remstedt, 2026",
     competition:"Tävling",practice:"Träning",competitionSubtitle:"Klubbval för avstånd och väderprognos",competitionPreview:"Utifrån sparade carrylängder, utan justering för vind eller höjdskillnad.",
     competitionNote:"Tävling visar en klubba för angivet avstånd utifrån dina sparade carrylängder, utan vind- eller höjdkompensation. Kontrollera tävlingens regler innan du använder klubbråd under ronden.",
     decreaseElevation:"Minska höjdskillnaden",increaseElevation:"Öka höjdskillnaden",elevationMetres:"Höjdskillnad i meter",
@@ -359,7 +382,16 @@ function changeLanguage(newLang){
 }
 function formatOne(number){return number.toFixed(1).replace(".",lang==="sv"?",":".");}
 
-let clubsM = JSON.parse(localStorage.getItem("gsc-clubs-v4") || "null") || cloneDefaults();
+function loadClubs(){
+  let saved;
+  try{saved=JSON.parse(localStorage.getItem("gsc-clubs-v4")||"null");}catch(e){saved=null;}
+  if(!Array.isArray(saved)) return cloneDefaults();
+  const names=new Set(saved.map(x=>x.n));
+  const merged=[...saved,...cloneDefaults().filter(x=>!names.has(x.n))];
+  if(merged.length!==saved.length) localStorage.setItem("gsc-clubs-v4",JSON.stringify(merged));
+  return merged;
+}
+let clubsM = loadClubs();
 let unit = localStorage.getItem("gsc-unit-v4") || "m";
 let selectionMode = localStorage.getItem("gsc-selection-v4") || "carry";
 let windMode = localStorage.getItem("gsc-windmode-v4") || "auto";
@@ -377,6 +409,7 @@ function toDisplay(m){ return unit==="yd" ? m*M_TO_YD : m; }
 function fromDisplay(v){ return unit==="yd" ? v/M_TO_YD : v; }
 function unitLabel(){ return unit==="yd" ? "yd" : "m"; }
 function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
+function escapeHtml(value){return String(value).replace(/[&<>"']/g,ch=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"})[ch]);}
 function norm360(v){ return ((v%360)+360)%360; }
 function degToCardinal(d){
   const dirs=lang==="sv"?["N","NO","O","SO","S","SV","V","NV"]:["N","NE","E","SE","S","SW","W","NW"];
@@ -510,6 +543,7 @@ function calc(){
     const best=clubsM.reduce((a,b)=>Math.abs(a.c-targetM)<Math.abs(b.c-targetM)?a:b);
     const u=unitLabel();
     $("previewClub").textContent=best.n;
+    $("previewClub").classList.toggle("long-club",best.n.length>3);
     $("previewSummary").innerHTML=`${toDisplay(best.c).toFixed(0)} ${u} ${t("clubCarry")}<br>${toDisplay(best.c+best.r).toFixed(0)} ${u} ${t("clubTotal")}`;
     const diff=toDisplay(best.c-targetM);
     $("previewGap").textContent=Math.abs(diff)<0.5?`${t("onTarget")} ${t("carry").toLowerCase()}`:`${Math.abs(diff).toFixed(0)} ${u} ${t(diff>0?"long":"short")} ${t("basedOn")} ${t("carry").toLowerCase()}`;
@@ -555,6 +589,7 @@ function calc(){
 
   $("club").textContent=best.n;
   $("previewClub").textContent=best.n;
+  $("previewClub").classList.toggle("long-club",best.n.length>3);
   $("previewSummary").innerHTML=`${toDisplay(best.carryM).toFixed(0)} ${u} ${t("clubCarry")}<br>${toDisplay(best.totalM).toFixed(0)} ${u} ${t("clubTotal")}`;
   $("summary").textContent=`${toDisplay(best.carryM).toFixed(0)} ${u} ${t("clubCarry")} • ${toDisplay(best.totalM).toFixed(0)} ${u} ${t("clubTotal")}`;
 
@@ -587,7 +622,7 @@ function calc(){
     const c=toDisplay(x.carryM),t=toDisplay(x.totalM),d=toDisplay(x.diffM);
     const roundedDiff=Math.round(d);
     return `<tr class="${x.n===best.n?"best":""}">
-      <td>${x.n}</td><td>${c.toFixed(0)} ${u}</td><td>${t.toFixed(0)} ${u}</td>
+      <td>${escapeHtml(x.n)}</td><td>${c.toFixed(0)} ${u}</td><td>${t.toFixed(0)} ${u}</td>
       <td>${roundedDiff>=0?"+":""}${roundedDiff} ${u}</td>
     </tr>`;
   }).join("");
@@ -600,22 +635,36 @@ function renderClubSettings(){
   const u=unitLabel();
   $("clubSettings").innerHTML=clubsM.map((x,i)=>`
     <div class="settings-row">
-      <strong>${x.n}</strong>
-      <input data-i="${i}" type="number" min="20" max="400" step="1" value="${Math.round(toDisplay(x.c))}">
-      <span>${u} ${t("clubCarry")}</span>
+      <strong>${escapeHtml(x.n)}</strong>
+      <label>${t("clubCarry")} (${u})<input data-i="${i}" data-field="c" aria-label="${escapeHtml(x.n)} ${t("clubCarry")}" type="number" min="1" max="400" step="1" value="${Math.round(toDisplay(x.c))}"></label>
+      <label>${t("roll")} (${u})<input data-i="${i}" data-field="r" aria-label="${escapeHtml(x.n)} ${t("roll")}" type="number" min="0" max="100" step="1" value="${Math.round(toDisplay(x.r))}"></label>
+      ${!defaultClubsM.some(club=>club.n===x.n)?`<button class="small-btn remove-club" type="button" data-remove="${i}" aria-label="${t("removeClub")}: ${escapeHtml(x.n)}">${t("removeClub")}</button>`:""}
     </div>`).join("");
 
   $("clubSettings").querySelectorAll("input").forEach(inp=>{
     inp.addEventListener("input",()=>{
       const i=Number(inp.dataset.i);
       const v=Number(inp.value);
-      if(Number.isFinite(v)&&v>0){
-        clubsM[i].c=fromDisplay(v);
+      if(inp.value!==""&&Number.isFinite(v)&&v>=(inp.dataset.field==="c"?1:0)&&v<=(inp.dataset.field==="c"?400:100)){
+        clubsM[i][inp.dataset.field]=fromDisplay(v);
         localStorage.setItem("gsc-clubs-v4",JSON.stringify(clubsM));
         calc();
       }
     });
   });
+  $("clubSettings").querySelectorAll("[data-remove]").forEach(btn=>{
+    btn.addEventListener("click",()=>{
+      clubsM.splice(Number(btn.dataset.remove),1);
+      localStorage.setItem("gsc-clubs-v4",JSON.stringify(clubsM));
+      renderClubSettings();calc();
+    });
+  });
+}
+
+function showAddClub(show){
+  $("addClubForm").classList.toggle("hidden",!show);
+  $("addClubBtn").setAttribute("aria-expanded",String(show));
+  $("clubFormError").textContent="";
 }
 
 function changeUnit(newUnit){
@@ -824,6 +873,28 @@ $("elev").addEventListener("input",()=>{
 });
 
 ["dist","manualSpeed","manualDir"].forEach(id=>$(id).addEventListener("input",calc));
+
+$("addClubBtn").addEventListener("click",()=>showAddClub($("addClubForm").classList.contains("hidden")));
+$("cancelClubBtn").addEventListener("click",()=>showAddClub(false));
+$("newClubType").addEventListener("change",()=>{
+  if($("newClubType").value!=="custom") $("newClubName").value=$("newClubType").value;
+  else $("newClubName").value="";
+});
+$("addClubForm").addEventListener("submit",event=>{
+  event.preventDefault();
+  const name=$("newClubName").value.trim().slice(0,20);
+  const carry=Number($("newClubCarry").value),roll=Number($("newClubRoll").value);
+  if(!name||!$("newClubCarry").value||!$("newClubRoll").value||!Number.isFinite(carry)||carry<1||carry>400||!Number.isFinite(roll)||roll<0||roll>100){
+    $("clubFormError").textContent=t("invalidClub");return;
+  }
+  if(clubsM.some(club=>club.n.toLowerCase()===name.toLowerCase())){
+    $("clubFormError").textContent=t("duplicateClub");return;
+  }
+  clubsM.push({n:name,c:fromDisplay(carry),r:fromDisplay(roll)});
+  localStorage.setItem("gsc-clubs-v4",JSON.stringify(clubsM));
+  $("addClubForm").reset();
+  showAddClub(false);renderClubSettings();calc();
+});
 
 $("resetBtn").addEventListener("click",()=>{
   clubsM=cloneDefaults();
