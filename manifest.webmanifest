@@ -1,6 +1,6 @@
 {
-  "name": "Golf Shot Calculator",
-  "short_name": "Golf Shot",
+  "name": "My Caddie - Golf Shot Calculator",
+  "short_name": "My Caddie",
   "start_url": "./",
   "display": "standalone",
   "background_color": "#707970",

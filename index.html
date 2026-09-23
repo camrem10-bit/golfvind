@@ -6,16 +6,17 @@
   <meta name="theme-color" content="#153f2e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="default">
-  <meta name="apple-mobile-web-app-title" content="Golf Shot Calculator">
+  <meta name="apple-mobile-web-app-title" content="My Caddie">
   <link rel="manifest" href="manifest.webmanifest">
   <link rel="apple-touch-icon" href="icon-180.png">
-  <title>Golf Shot Calculator</title>
+  <title>My Caddie - Golf Shot Calculator</title>
   <style>
     :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text","SF Pro Display","Segoe UI",sans-serif;font-weight:500;color:#1a271e;background:#707970;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
     *{box-sizing:border-box}
     body{margin:0;min-height:100vh;background:#707970;padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
     main{max-width:560px;margin:auto}
-    header{padding:4px 0 7px}h1{display:flex;align-items:center;gap:6px;font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap;color:#fff}h1 img{width:38px;height:auto;flex:none}.sub{margin:2px 0 0;color:#fff;font-size:clamp(10px,2.7vw,13px)}
+    header{padding:4px 0 7px}.header-top{display:flex;align-items:flex-start;gap:5px}.brand-logo{width:54px;height:auto;flex:none;align-self:center}.brand-copy{min-width:0;flex:1;align-self:center}h1{margin:0;color:#fff;letter-spacing:-.35px;line-height:1.05}.brand-name{font-size:clamp(17px,4.8vw,26px);font-weight:800}.brand-descriptor{font-size:clamp(10px,2.8vw,16px);font-weight:500}.sub{margin:2px 0 0;color:#fff;font-size:clamp(9px,2.45vw,12px);line-height:1.15}
+    .language-switch{display:flex;align-items:center;gap:3px;flex:none}.language-switch button{width:30px;height:30px;padding:0;border:1px solid transparent;border-radius:7px;background:transparent;font-size:19px;line-height:1;touch-action:manipulation}.language-switch button[aria-pressed=true]{border-color:#fff;background:#ffffff25}.language-switch button:focus-visible{outline:2px solid #fff;outline-offset:2px}
     .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;margin:9px 0;box-shadow:0 3px 10px #233e2710}
     .top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:stretch}
     .top-grid .card{margin:0;min-width:0;padding:9px;height:100%;display:flex;flex-direction:column}
@@ -38,6 +39,16 @@
     .preview-gap{font-size:11px;margin-top:5px}
     .top-grid .preview .inline-unit{margin-top:auto}
     .top-grid .preview>.seg:last-child{margin-top:0}
+    .play-mode{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:9px 0 0}
+    .play-mode button{min-height:38px;border:2px solid transparent;border-radius:10px;color:#fff;font-size:13px;font-weight:700;touch-action:manipulation}
+    .play-mode .competition-btn{background:#a72d35}.play-mode .practice-btn{background:var(--green)}
+    .play-mode button[aria-pressed=false]{opacity:.72}.play-mode button[aria-pressed=true]{border-color:#fff;box-shadow:0 0 0 1px #1c2d21}
+    .play-mode button:focus-visible{outline:2px solid #fff;outline-offset:2px}
+    .competition-note{background:#fff8f7;border:1px solid #e8bdc0;border-radius:10px;padding:9px 11px;margin-top:8px;color:#67282c;font-size:12px;font-weight:600;line-height:1.4}
+    .competition-mode .training-only,.competition-only{display:none!important}
+    .competition-mode .competition-only{display:block!important}
+    .competition-mode .wind-section{padding-top:0}.competition-mode .wind-section .section-title{border-top:0!important;padding-top:0!important}
+    .competition-mode .wind-section>.seg{grid-template-columns:1fr}.competition-mode #manualBtn{display:none}
     .inline-unit{margin-top:10px}
     .elev-wrap{display:grid;grid-template-columns:27px minmax(0,1fr) 27px 48px;gap:5px;align-items:center}
     .circle-btn{width:27px;height:27px;border-radius:50%;border:1px solid #cbd5cf;background:#fff;font-size:19px;line-height:1}
@@ -77,80 +88,85 @@
   </style>
 </head>
 <body>
-<main>
+<main id="app">
   <header>
-    <h1><img src="./logo-green.svg" alt="" width="38" height="23">Golf Shot Calculator</h1>
-    <p class="sub">Wind-adjusted club selection, carry and total distance</p>
+    <div class="header-top"><img class="brand-logo" src="./logo-green.svg" alt="" width="54" height="33"><div class="brand-copy"><h1><span class="brand-name">My Caddie</span><span class="brand-descriptor"> - Golf Shot Calculator</span></h1><p class="sub" id="subtitle" data-i18n="subtitle">Wind-adjusted club selection, carry and total distance</p></div><div class="language-switch" role="group" aria-label="Language / Språk"><button id="langSv" type="button" aria-label="Svenska" title="Svenska" aria-pressed="false">🇸🇪</button><button id="langEn" type="button" aria-label="English" title="English" aria-pressed="true">🇬🇧</button></div></div>
   </header>
 
   <div class="top-grid">
     <section class="card">
-      <div class="section-title">Shot</div>
-      <label for="dist">Distance to target</label>
+      <div class="section-title" data-i18n="shot">Shot</div>
+      <label for="dist" data-i18n="distanceTarget">Distance to target</label>
       <input id="dist" type="number" min="1" max="600" step="1" value="135" inputmode="numeric">
-      <label>Club selection based on</label>
-      <div class="seg"><button id="carryBtn" class="active" type="button">Carry</button><button id="totalBtn" type="button">Total</button></div>
+      <label class="training-only" data-i18n="selectionBased">Club selection based on</label>
+      <div class="seg training-only"><button id="carryBtn" class="active" type="button" data-i18n="carry">Carry</button><button id="totalBtn" type="button" data-i18n="total">Total</button></div>
     </section>
     <section class="card preview" aria-live="polite">
-      <div class="muted">Recommended club</div>
-      <div class="preview-body"><div class="big" id="previewClub">7i</div><div class="preview-stat" id="previewSummary">135 m carry<br>146 m total</div></div>
-      <div class="preview-gap" id="previewGap">On target based on carry</div>
-      <div class="muted" id="previewWindStatus"></div>
-      <label class="inline-unit">Distance unit</label>
-      <div class="seg"><button id="metresBtn" class="active" type="button">Meters</button><button id="yardsBtn" type="button">Yards</button></div>
+      <div class="muted" data-i18n="recommendedClub">Recommended club</div>
+      <div class="preview-body training-only"><div class="big" id="previewClub">7i</div><div class="preview-stat" id="previewSummary">135 m carry<br>146 m total</div></div>
+      <div class="preview-gap training-only" id="previewGap">On target based on carry</div>
+      <div class="muted training-only" id="previewWindStatus"></div>
+      <div class="competition-only muted" data-i18n="competitionPreview">Club recommendations are off during competition.</div>
+      <label class="inline-unit" data-i18n="distanceUnit">Distance unit</label>
+      <div class="seg"><button id="metresBtn" class="active" type="button" data-i18n="metres">Meters</button><button id="yardsBtn" type="button" data-i18n="yards">Yards</button></div>
     </section>
   </div>
+  <div class="play-mode" role="group" aria-label="Play mode / Spelläge">
+    <button id="competitionBtn" class="competition-btn" type="button" aria-pressed="false" data-i18n="competition">Competition</button>
+    <button id="practiceBtn" class="practice-btn" type="button" aria-pressed="true" data-i18n="practice">Practice</button>
+  </div>
+  <div class="competition-note competition-only" data-i18n="competitionNote" role="status">Competition shows only your entered distance and the weather forecast. Club recommendations, slope and wind adjustments are off. This mode does not guarantee permission to use the app; check the event's local rules.</div>
   <section class="card">
-    <label for="elev" style="margin-top:0">Slope Compensation - Uphill vs Downhill</label>
-    <div class="elev-wrap"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-30" max="30" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
-    <div class="muted" id="elevText" style="text-align:center;margin-top:4px">Level</div>
-    <div class="muted" id="elevRange" style="text-align:center">−30 m to +30 m</div>
+    <label for="elev" class="training-only" style="margin-top:0" data-i18n="slope">Slope Compensation - Uphill vs Downhill</label>
+    <div class="elev-wrap training-only"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-30" max="30" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
+    <div class="muted training-only" id="elevText" style="text-align:center;margin-top:4px">Level</div>
+    <div class="muted training-only" id="elevRange" style="text-align:center">−30 m to +30 m</div>
     <div class="wind-section">
-      <div class="section-title" style="border-top:1px solid var(--line);padding-top:9px">Wind</div>
-      <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
+      <div class="section-title" style="border-top:1px solid var(--line);padding-top:9px" data-i18n="wind">Wind</div>
+      <div class="seg"><button id="autoBtn" class="active" type="button" data-i18n="useLocation">Use my location</button><button id="manualBtn" type="button" data-i18n="manualWind">Manual wind</button></div>
       <div id="autoWind">
         <div class="status-card">
           <div class="current-wind-layout">
             <div class="current-wind-info">
-              <strong>Current location</strong>
+              <strong data-i18n="currentLocation">Current location</strong>
               <div class="muted" id="locationText">Location unavailable</div>
               <div class="muted" id="locationAccuracy"></div>
               <div class="wind-big" id="weatherWind">—</div>
               <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
             </div>
             <div class="current-wind-actions">
-              <button class="small-btn" id="refreshWeather" type="button">Refresh</button>
-              <div id="autoWindDial" class="dial auto-wind-dial" role="img" aria-label="Waiting for wind and shot direction">
-                <div class="mark top" aria-hidden="true">TAIL</div>
-                <div class="mark right" aria-hidden="true">R</div>
-                <div class="mark bottom" aria-hidden="true">HEAD</div>
-                <div class="mark left" aria-hidden="true">L</div>
+              <button class="small-btn" id="refreshWeather" type="button" data-i18n="refresh">Refresh</button>
+              <div id="autoWindDial" class="dial auto-wind-dial training-only" role="img" aria-label="Waiting for wind and shot direction">
+                <div class="mark top" aria-hidden="true" data-i18n="dialTail">TAIL</div>
+                <div class="mark right" aria-hidden="true" data-i18n="dialRight">R</div>
+                <div class="mark bottom" aria-hidden="true" data-i18n="dialHead">HEAD</div>
+                <div class="mark left" aria-hidden="true" data-i18n="dialLeft">L</div>
                 <div class="arrow hidden" id="autoWindArrow" aria-hidden="true"></div>
                 <div class="hub" aria-hidden="true"></div>
               </div>
             </div>
           </div>
         </div>
-        <label>Shot direction</label>
-        <div class="muted">Point the top of your iPhone towards the target. Direction updates as you turn.</div>
-        <button class="btn primary compass-btn" id="setDirectionBtn" type="button">Enable live direction</button>
-        <div class="status-card"><div class="between"><span class="muted">Live shot direction</span><span class="shot-heading" id="shotHeading">—</span></div><div class="muted" id="compassStatus">Enable compass once, then aim your phone</div></div>
+        <label class="training-only" data-i18n="shotDirection">Shot direction</label>
+        <div class="muted training-only" data-i18n="aimInstruction">Point the top of your iPhone towards the target. Direction updates as you turn.</div>
+        <button class="btn primary compass-btn training-only" id="setDirectionBtn" type="button" data-i18n="enableDirection">Enable live direction</button>
+        <div class="status-card training-only"><div class="between"><span class="muted" data-i18n="liveDirection">Live shot direction</span><span class="shot-heading" id="shotHeading">—</span></div><div class="muted" id="compassStatus">Enable compass once, then aim your phone</div></div>
       </div>
-        <div id="manualWind" class="hidden">
-          <label for="manualSpeed">Wind speed (m/s)</label>
+        <div id="manualWind" class="hidden training-only">
+          <label for="manualSpeed" data-i18n="windSpeed">Wind speed (m/s)</label>
           <input id="manualSpeed" type="number" min="0" max="30" step="0.5" value="10">
 
-          <label>Relative wind direction</label>
+          <label data-i18n="relativeDirection">Relative wind direction</label>
           <div class="between">
-            <span class="muted">Drag the arrow</span>
+            <span class="muted" data-i18n="dragArrow">Drag the arrow</span>
             <strong id="manualDeg">180°</strong>
           </div>
           <div class="dial-wrap">
             <div class="dial" id="manualDial">
-              <div class="mark top">TAIL</div>
-              <div class="mark right">R</div>
-              <div class="mark bottom">HEAD</div>
-              <div class="mark left">L</div>
+              <div class="mark top" data-i18n="dialTail">TAIL</div>
+              <div class="mark right" data-i18n="dialRight">R</div>
+              <div class="mark bottom" data-i18n="dialHead">HEAD</div>
+              <div class="mark left" data-i18n="dialLeft">L</div>
               <div class="arrow" id="manualArrow"></div>
               <div class="hub"></div>
             </div>
@@ -159,14 +175,14 @@
           <input id="manualDir" type="range" min="0" max="359" step="1" value="180">
         </div>
 
-      <div class="direction-text" id="relativeWindText">Waiting for wind and shot direction</div>
-      <div class="component-text" id="componentsText"></div>
+      <div class="direction-text training-only" id="relativeWindText">Waiting for wind and shot direction</div>
+      <div class="component-text training-only" id="componentsText"></div>
       <div id="windError" class="error"></div>
     </div>
   </section>
 
-  <section class="card result" aria-live="polite">
-    <div class="muted">Recommended club</div>
+  <section class="card result training-only" aria-live="polite">
+    <div class="muted" data-i18n="recommendedClub">Recommended club</div>
     <div class="big" id="club">—</div>
     <div id="summary"></div>
     <div class="muted" id="gap"></div>
@@ -175,38 +191,38 @@
     <div class="muted" id="resultWindStatus"></div>
   </section>
 
-  <section class="card">
-    <div class="section-title">All clubs</div>
+  <section class="card training-only">
+    <div class="section-title" data-i18n="allClubs">All clubs</div>
     <table>
-      <thead><tr><th>Club</th><th>Carry</th><th>Total</th><th>Diff</th></tr></thead>
+      <thead><tr><th data-i18n="club">Club</th><th data-i18n="carry">Carry</th><th data-i18n="total">Total</th><th data-i18n="diff">Diff</th></tr></thead>
       <tbody id="rows"></tbody>
     </table>
   </section>
 
-  <section class="card">
+  <section class="card training-only">
     <details>
-      <summary><strong>My club distances</strong></summary>
+      <summary><strong data-i18n="myDistances">My club distances</strong></summary>
       <div id="clubSettings" style="margin-top:12px"></div>
-      <button class="small-btn" id="resetBtn" type="button" style="margin-top:10px">Reset to default distances</button>
+      <button class="small-btn" id="resetBtn" type="button" style="margin-top:10px" data-i18n="resetDistances">Reset to default distances</button>
     </details>
   </section>
 
   <section class="card">
-    <div class="section-title">Model</div>
-    <p class="footer-note">
+    <div class="section-title" data-i18n="model">Model</div>
+    <p class="footer-note" data-i18n="modelNote">
       This is a practical estimate based on your baseline club distances. Live wind uses current
       10 m weather-model wind for your GPS position. Course-level wind can differ because of trees,
       terrain, buildings and gusts. Headwind has a greater effect than tailwind, crosswind mainly
       affects direction. Club estimates assume a straight shot.
     </p>
     <div class="between" style="margin-top:12px">
-      <span class="muted">Version 5.14</span>
-      <button class="small-btn" id="updateBtn" type="button">Check for updates</button>
+      <span class="muted" data-i18n="version">Version 5.17</span>
+      <button class="small-btn" id="updateBtn" type="button" data-i18n="checkUpdates">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
   </section>
 
-  <footer class="creator-footer">Created by Camilla Remstedt, 2026</footer>
+  <footer class="creator-footer" data-i18n="credit">Created by Camilla Remstedt, 2026</footer>
 </main>
 
 <script>
@@ -223,10 +239,131 @@ const defaultClubsM = [
 const $ = id => document.getElementById(id);
 const cloneDefaults = () => JSON.parse(JSON.stringify(defaultClubsM));
 
+const translations={
+  en:{
+    appTitle:"My Caddie - Golf Shot Calculator",subtitle:"Wind-adjusted club selection, carry and total distance",
+    shot:"Shot",distanceTarget:"Distance to target",selectionBased:"Club selection based on",
+    carry:"Carry",total:"Total",recommendedClub:"Recommended club",distanceUnit:"Distance unit",
+    metres:"Meters",yards:"Yards",slope:"Slope Compensation - Uphill vs Downhill",
+    wind:"Wind",useLocation:"Use my location",manualWind:"Manual wind",currentLocation:"Current location",
+    refresh:"Refresh",dialTail:"TAIL",dialHead:"HEAD",dialLeft:"L",dialRight:"R",shotDirection:"Shot direction",
+    aimInstruction:"Point the top of your iPhone towards the target. Direction updates as you turn.",
+    enableDirection:"Enable live direction",liveDirection:"Live shot direction",windSpeed:"Wind speed (m/s)",
+    relativeDirection:"Relative wind direction",dragArrow:"Drag the arrow",allClubs:"All clubs",
+    club:"Club",diff:"Diff",myDistances:"My club distances",resetDistances:"Reset to default distances",
+    model:"Model",modelNote:"This is a practical estimate based on your baseline club distances. Live wind uses current 10 m weather-model wind for your GPS position. Course-level wind can differ because of trees, terrain, buildings and gusts. Headwind has a greater effect than tailwind, crosswind mainly affects direction. Club estimates assume a straight shot.",
+    version:"Version 5.17",checkUpdates:"Check for updates",credit:"Created by Camilla Remstedt, 2026",
+    competition:"Competition",practice:"Practice",competitionSubtitle:"Entered distance and forecast wind",competitionPreview:"Club recommendations are off during competition.",
+    competitionNote:"Competition shows only your entered distance and the weather forecast. Club recommendations, slope and wind adjustments are off. This mode does not guarantee permission to use the app; check the event's local rules.",
+    decreaseElevation:"Decrease elevation",increaseElevation:"Increase elevation",elevationMetres:"Elevation in metres",
+    uphill:"Uphill",downhill:"Downhill",level:"Level",to:"to",tailwind:"Tailwind",headwind:"Headwind",
+    crosswind:"Crosswind",fromLeft:"from the left",fromRight:"from the right",calmWind:"Calm / negligible wind",
+    waitingWind:"Waiting for wind and shot direction",tailComponent:"Tailwind component",headComponent:"Headwind component",
+    crossComponent:"Crosswind",crossFromLeft:"from left",crossFromRight:"from right",
+    onTarget:"On target based on",includingRoll:"including roll",long:"long",short:"short",basedOn:"based on",
+    liveWindPending:"Calm estimate • live wind pending",playsAs:"Plays as",withElevation:"with",elevation:"elevation",
+    lateralMovement:"Lateral movement: approx.",right:"right",left:"left",clubCarry:"carry",clubTotal:"total",
+    locationUnavailable:"Location unavailable",tapUseLocation:"Tap “Use my location” to load wind",
+    enableCompassHint:"Enable compass once, then aim your phone",locationUnsupported:"Location is not supported by this browser.",
+    requestingLocation:"Requesting location…",findingPlace:"Finding place…",allowLocation:"Allow location access in Safari/iPhone settings, then try again.",
+    loadingWind:"Loading wind…",windFrom:"Wind from",calm:"Calm",now:"now",windUnavailable:"Wind unavailable",
+    currentWindUnavailable:"Could not load current wind",liveWindUnavailable:"Could not load live wind. Switch to Manual if needed.",
+    directionUpdating:"Updating automatically while the app is open",compassMissing:"This device does not provide compass direction. Use Manual wind.",
+    compassDenied:"Compass permission was not granted.",compassAccess:"Compass access is unavailable. Use Manual wind mode if needed.",
+    waitingCompass:"Waiting for live direction…",compassUnavailable:"Compass unavailable",noCompassReading:"No compass reading received",
+    compassHelp:"Move the phone and allow Motion & Orientation access in Safari/iPhone settings.",
+    aimPhone:"Aim the phone to update direction",tapLocation:"Tap Use my location to load live wind.",
+    updateReady:"New version ready. Reloading…",checkingUpdates:"Checking for updates…",
+    downloadingUpdate:"New version downloading…",latestVersion:"You have the latest available version.",
+    updateCheckFailed:"Could not check. Connect to the internet and try again.",offlineUnavailable:"Offline support is unavailable.",
+    updatesUnsupported:"Updates require a supported browser."
+  },
+  sv:{
+    appTitle:"My Caddie - Golf Shot Calculator",subtitle:"Klubbval med hänsyn till vind, carry och total längd",
+    shot:"Slag",distanceTarget:"Avstånd till mål",selectionBased:"Välj klubb utifrån",
+    carry:"Carry",total:"Totalt",recommendedClub:"Rekommenderad klubba",distanceUnit:"Avståndsenhet",
+    metres:"Meter",yards:"Yard",slope:"Lutningskompensation – uppför och nedför",
+    wind:"Vind",useLocation:"Använd min plats",manualWind:"Manuell vind",currentLocation:"Nuvarande plats",
+    refresh:"Uppdatera",dialTail:"MEDVIND",dialHead:"MOTVIND",dialLeft:"V",dialRight:"H",shotDirection:"Slagriktning",
+    aimInstruction:"Rikta ovansidan av din iPhone mot målet. Riktningen uppdateras när du vrider telefonen.",
+    enableDirection:"Aktivera riktning",liveDirection:"Aktuell slagriktning",windSpeed:"Vindhastighet (m/s)",
+    relativeDirection:"Vindriktning relativt slaget",dragArrow:"Dra pilen",allClubs:"Alla klubbor",
+    club:"Klubba",diff:"Skillnad",myDistances:"Mina klubblängder",resetDistances:"Återställ standardlängder",
+    model:"Beräkningsmodell",modelNote:"Detta är en praktisk uppskattning utifrån dina klubblängder. Den aktuella vinden hämtas från en vädermodell på 10 m höjd för din GPS-position. Vinden på banan kan skilja sig på grund av träd, terräng, byggnader och vindbyar. Motvind påverkar mer än medvind och sidvind påverkar främst riktningen. Beräkningen förutsätter ett rakt slag.",
+    version:"Version 5.17",checkUpdates:"Sök uppdatering",credit:"Skapad av Camilla Remstedt, 2026",
+    competition:"Tävling",practice:"Träning",competitionSubtitle:"Inmatat avstånd och väderprognos",competitionPreview:"Klubbförslag är avstängda under tävling.",
+    competitionNote:"Tävling visar endast inmatat avstånd och väderprognos. Klubbförslag, höjdskillnad och vindjustering är avstängda. Läget garanterar inte att appen får användas; kontrollera tävlingens lokala regler.",
+    decreaseElevation:"Minska höjdskillnaden",increaseElevation:"Öka höjdskillnaden",elevationMetres:"Höjdskillnad i meter",
+    uphill:"Uppför",downhill:"Nedför",level:"Plant",to:"till",tailwind:"Medvind",headwind:"Motvind",
+    crosswind:"Sidvind",fromLeft:"från vänster",fromRight:"från höger",calmWind:"Lugnt / försumbar vind",
+    waitingWind:"Väntar på vind och slagriktning",tailComponent:"Medvindskomponent",headComponent:"Motvindskomponent",
+    crossComponent:"Sidvind",crossFromLeft:"från vänster",crossFromRight:"från höger",
+    onTarget:"På målet utifrån",includingRoll:"inklusive rull",long:"för långt",short:"för kort",basedOn:"utifrån",
+    liveWindPending:"Uppskattning utan vind • väntar på aktuell vind",playsAs:"Spelas som",withElevation:"med",elevation:"höjdskillnad",
+    lateralMovement:"Sidoförflyttning: cirka",right:"höger",left:"vänster",clubCarry:"carry",clubTotal:"totalt",
+    locationUnavailable:"Plats saknas",tapUseLocation:"Tryck på ”Använd min plats” för att hämta vinden",
+    enableCompassHint:"Aktivera kompassen en gång och rikta sedan telefonen",locationUnsupported:"Din webbläsare stöder inte platsinformation.",
+    requestingLocation:"Hämtar plats…",findingPlace:"Söker ort…",allowLocation:"Tillåt platsåtkomst i Safari eller iPhone-inställningarna och försök igen.",
+    loadingWind:"Hämtar vind…",windFrom:"Vind från",calm:"Lugnt",now:"nu",windUnavailable:"Vinddata saknas",
+    currentWindUnavailable:"Kunde inte hämta aktuell vind",liveWindUnavailable:"Kunde inte hämta aktuell vind. Välj manuell vind vid behov.",
+    directionUpdating:"Uppdateras automatiskt medan appen är öppen",compassMissing:"Telefonen kan inte visa kompassriktning. Välj manuell vind.",
+    compassDenied:"Kompassåtkomst nekades.",compassAccess:"Kompassåtkomst saknas. Välj manuell vind vid behov.",
+    waitingCompass:"Väntar på slagriktning…",compassUnavailable:"Kompass saknas",noCompassReading:"Ingen kompassriktning mottogs",
+    compassHelp:"Rör telefonen och tillåt rörelse och orientering i Safari eller iPhone-inställningarna.",
+    aimPhone:"Rikta telefonen för att uppdatera slagriktningen",tapLocation:"Tryck på Använd min plats för att hämta aktuell vind.",
+    updateReady:"Ny version klar. Laddar om…",checkingUpdates:"Söker uppdateringar…",
+    downloadingUpdate:"Laddar ned ny version…",latestVersion:"Du har den senaste tillgängliga versionen.",
+    updateCheckFailed:"Kunde inte söka. Anslut till internet och försök igen.",offlineUnavailable:"Offlinestöd saknas.",
+    updatesUnsupported:"Uppdateringar kräver en webbläsare som stöds."
+  }
+};
+let lang=localStorage.getItem("gsc-language-v1")==="sv"?"sv":"en";
+const t=key=>translations[lang][key] ?? translations.en[key] ?? key;
+const messageKeys={};
+function setMessage(id,key){messageKeys[id]=key;$(id).textContent=key?t(key):"";}
+let currentPlace=null;
+function formatPlace(){
+  if(!currentPlace) return;
+  let {city,country,countryCode,lat,lon}=currentPlace;
+  if(countryCode && typeof Intl.DisplayNames==="function"){
+    try{country=new Intl.DisplayNames([lang],{type:"region"}).of(countryCode.toUpperCase())||country;}catch(e){}
+  }
+  $("locationText").textContent=city ? [city,country].filter(Boolean).join(", ") : `${lat.toFixed(4)}, ${lon.toFixed(4)}`;
+}
+function renderWeather(){
+  if(!weather) return;
+  $("weatherWind").textContent=`${degToCardinal(weather.fromDeg)} ${formatOne(weather.speed)} m/s`;
+  const from=`${t("windFrom")} ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°)`;
+  $("weatherDir").textContent=`${weather.speed<0.5?t("calm"):from} • ${String(weather.time||t("now")).replace("T"," ")}`;
+}
+function applyLanguage(){
+  document.documentElement.lang=lang;
+  document.title=t("appTitle");
+  document.querySelectorAll("[data-i18n]").forEach(el=>{el.textContent=t(el.dataset.i18n);});
+  setButtons();
+  $("langSv").setAttribute("aria-pressed",String(lang==="sv"));
+  $("langEn").setAttribute("aria-pressed",String(lang==="en"));
+  $("elevMinus").setAttribute("aria-label",t("decreaseElevation"));
+  $("elevPlus").setAttribute("aria-label",t("increaseElevation"));
+  $("elev").setAttribute("aria-label",t("elevationMetres"));
+  Object.entries(messageKeys).forEach(([id,key])=>{if(key) $(id).textContent=t(key);});
+  formatPlace();renderWeather();
+  if(shotHeading!==null) $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
+  updateElevationUI();updateManualDial();renderClubSettings();calc();
+}
+function changeLanguage(newLang){
+  if(newLang===lang) return;
+  lang=newLang;
+  localStorage.setItem("gsc-language-v1",lang);
+  applyLanguage();
+}
+function formatOne(number){return number.toFixed(1).replace(".",lang==="sv"?",":".");}
+
 let clubsM = JSON.parse(localStorage.getItem("gsc-clubs-v4") || "null") || cloneDefaults();
 let unit = localStorage.getItem("gsc-unit-v4") || "m";
 let selectionMode = localStorage.getItem("gsc-selection-v4") || "carry";
 let windMode = localStorage.getItem("gsc-windmode-v4") || "auto";
+let playMode = localStorage.getItem("gsc-play-mode-v1")==="competition"?"competition":"practice";
 
 let elevationM = clamp(Number(localStorage.getItem("gsc-elevation-v5")) || 0,-30,30);
 let gps = null;
@@ -242,19 +379,34 @@ function unitLabel(){ return unit==="yd" ? "yd" : "m"; }
 function clamp(v,min,max){ return Math.max(min,Math.min(max,v)); }
 function norm360(v){ return ((v%360)+360)%360; }
 function degToCardinal(d){
-  const dirs=["N","NE","E","SE","S","SW","W","NW"];
+  const dirs=lang==="sv"?["N","NO","O","SO","S","SV","V","NV"]:["N","NE","E","SE","S","SW","W","NW"];
   return dirs[Math.round(norm360(d)/45)%8];
 }
 
 function setButtons(){
+  const competition=playMode==="competition";
+  $("subtitle").textContent=t(competition?"competitionSubtitle":"subtitle");
+  $("app").classList.toggle("competition-mode",competition);
+  $("competitionBtn").setAttribute("aria-pressed",String(competition));
+  $("practiceBtn").setAttribute("aria-pressed",String(!competition));
   $("metresBtn").classList.toggle("active",unit==="m");
   $("yardsBtn").classList.toggle("active",unit==="yd");
   $("carryBtn").classList.toggle("active",selectionMode==="carry");
   $("totalBtn").classList.toggle("active",selectionMode==="total");
-  $("autoBtn").classList.toggle("active",windMode==="auto");
-  $("manualBtn").classList.toggle("active",windMode==="manual");
-  $("autoWind").classList.toggle("hidden",windMode!=="auto");
-  $("manualWind").classList.toggle("hidden",windMode!=="manual");
+  $("autoBtn").classList.toggle("active",competition||windMode==="auto");
+  $("manualBtn").classList.toggle("active",!competition&&windMode==="manual");
+  $("autoWind").classList.toggle("hidden",!competition&&windMode!=="auto");
+  $("manualWind").classList.toggle("hidden",competition||windMode!=="manual");
+  ["carryBtn","totalBtn","elevMinus","elevPlus","elev","manualSpeed","manualDir"].forEach(id=>{$(id).disabled=competition;});
+}
+
+function setPlayingMode(mode){
+  if(mode!=="competition"&&mode!=="practice") return;
+  playMode=mode;
+  localStorage.setItem("gsc-play-mode-v1",mode);
+  if(mode==="competition") setMessage("windError","");
+  setButtons();
+  calc();
 }
 
 function updateElevationUI(){
@@ -263,29 +415,29 @@ function updateElevationUI(){
   const rounded = Math.round(valD);
   $("elevValue").textContent = `${rounded>0?"+":""}${rounded} ${unitLabel()}`;
   $("elev").value = elevationM;
-  $("elevText").textContent = elevationM>0 ? "Uphill" : elevationM<0 ? "Downhill" : "Level";
-  $("elevRange").textContent = `−${Math.round(toDisplay(30))} ${unitLabel()} to +${Math.round(toDisplay(30))} ${unitLabel()}`;
+  $("elevText").textContent = t(elevationM>0?"uphill":elevationM<0?"downhill":"level");
+  $("elevRange").textContent = `−${Math.round(toDisplay(30))} ${unitLabel()} ${t("to")} +${Math.round(toDisplay(30))} ${unitLabel()}`;
 }
 
 function directionDescriptionFromComponents(along,cross){
   const a=Math.abs(along), c=Math.abs(cross);
-  if(a<0.5 && c<0.5) return "Calm / negligible wind";
-  const side = cross>0 ? "from the left" : "from the right";
-  if(a<0.8 && c>=0.8) return `Crosswind ${side}`;
-  if(c<0.8 && along>0) return "Tailwind";
-  if(c<0.8 && along<0) return "Headwind";
-  return `${along>0?"Tailwind":"Headwind"} ${side}`;
+  if(a<0.5 && c<0.5) return t("calmWind");
+  const side = t(cross>0?"fromLeft":"fromRight");
+  if(a<0.8 && c>=0.8) return `${t("crosswind")} ${side}`;
+  if(c<0.8 && along>0) return t("tailwind");
+  if(c<0.8 && along<0) return t("headwind");
+  return `${t(along>0?"tailwind":"headwind")} ${side}`;
 }
 
 function manualDirectionDescription(d){
-  if(d<23||d>=338) return "Tailwind";
-  if(d<68) return "Tailwind from the left";
-  if(d<113) return "Crosswind from the left";
-  if(d<158) return "Headwind from the left";
-  if(d<203) return "Headwind";
-  if(d<248) return "Headwind from the right";
-  if(d<293) return "Crosswind from the right";
-  return "Tailwind from the right";
+  if(d<23||d>=338) return t("tailwind");
+  if(d<68) return `${t("tailwind")} ${t("fromLeft")}`;
+  if(d<113) return `${t("crosswind")} ${t("fromLeft")}`;
+  if(d<158) return `${t("headwind")} ${t("fromLeft")}`;
+  if(d<203) return t("headwind");
+  if(d<248) return `${t("headwind")} ${t("fromRight")}`;
+  if(d<293) return `${t("crosswind")} ${t("fromRight")}`;
+  return `${t("tailwind")} ${t("fromRight")}`;
 }
 
 // Returns along wind component: + = tailwind, - = headwind.
@@ -324,7 +476,7 @@ function updateRelativeWindText(){
   let comps = windMode==="manual" ? manualWindComponents() : liveWindComponents();
 
   if(!comps){
-    $("relativeWindText").textContent = "Waiting for wind and shot direction";
+    $("relativeWindText").textContent = t("waitingWind");
     $("componentsText").textContent = "";
     return;
   }
@@ -332,10 +484,10 @@ function updateRelativeWindText(){
   const {along,cross}=comps;
   $("relativeWindText").textContent = directionDescriptionFromComponents(along,cross);
 
-  const longLabel = along>=0 ? "Tailwind" : "Headwind";
-  const crossLabel = cross>=0 ? "from left" : "from right";
+  const longLabel = t(along>=0 ? "tailComponent" : "headComponent");
+  const crossLabel = t(cross>=0 ? "crossFromLeft" : "crossFromRight");
   $("componentsText").textContent =
-    `${longLabel} component: ${Math.abs(along).toFixed(1)} m/s • Crosswind: ${Math.abs(cross).toFixed(1)} m/s ${crossLabel}`;
+    `${longLabel}: ${formatOne(Math.abs(along))} m/s • ${t("crossComponent")}: ${formatOne(Math.abs(cross))} m/s ${crossLabel}`;
 }
 
 function updateAutoWindDial(){
@@ -343,7 +495,7 @@ function updateAutoWindDial(){
   const comps=windMode==="auto" && weather && weather.speed>=0.5 ? liveWindComponents() : null;
   if(!comps){
     arrow.classList.add("hidden");
-    dial.setAttribute("aria-label","Waiting for wind and shot direction");
+    dial.setAttribute("aria-label",t("waitingWind"));
     return;
   }
   const angle=norm360(Math.atan2(comps.cross,comps.along)*180/Math.PI);
@@ -353,6 +505,14 @@ function updateAutoWindDial(){
 }
 
 function calc(){
+  if(playMode==="competition"){
+    $("previewClub").textContent="—";
+    ["previewSummary","previewGap","previewWindStatus","club","summary","gap","playAs","side","resultWindStatus","relativeWindText","componentsText"].forEach(id=>{$(id).textContent="";});
+    $("rows").innerHTML="";
+    $("autoWindArrow").classList.add("hidden");
+    $("autoWindDial").setAttribute("aria-label",t("waitingWind"));
+    return;
+  }
   const targetDisplay=Math.max(1,Number($("dist").value)||135);
   const targetM=fromDisplay(targetDisplay);
   const effectiveTargetM=targetM+elevationM;
@@ -389,31 +549,32 @@ function calc(){
 
   $("club").textContent=best.n;
   $("previewClub").textContent=best.n;
-  $("previewSummary").innerHTML=`${toDisplay(best.carryM).toFixed(0)} ${u} carry<br>${toDisplay(best.totalM).toFixed(0)} ${u} total`;
-  $("summary").textContent=`${toDisplay(best.carryM).toFixed(0)} ${u} carry • ${toDisplay(best.totalM).toFixed(0)} ${u} total`;
+  $("previewSummary").innerHTML=`${toDisplay(best.carryM).toFixed(0)} ${u} ${t("clubCarry")}<br>${toDisplay(best.totalM).toFixed(0)} ${u} ${t("clubTotal")}`;
+  $("summary").textContent=`${toDisplay(best.carryM).toFixed(0)} ${u} ${t("clubCarry")} • ${toDisplay(best.totalM).toFixed(0)} ${u} ${t("clubTotal")}`;
 
   const diffD=toDisplay(best.diffM);
+  const selectionLabel=selectionMode==="carry"?t("carry").toLowerCase():t("includingRoll");
   if(Math.abs(diffD)<0.5){
-    $("gap").textContent=`On target based on ${selectionMode==="carry"?"carry":"including roll"}`;
+    $("gap").textContent=`${t("onTarget")} ${selectionLabel}`;
   }else{
-    $("gap").textContent=`${Math.abs(diffD).toFixed(0)} ${u} ${diffD>0?"long":"short"} based on ${selectionMode==="carry"?"carry":"including roll"}`;
+    $("gap").textContent=`${Math.abs(diffD).toFixed(0)} ${u} ${t(diffD>0?"long":"short")} ${t("basedOn")} ${selectionLabel}`;
   }
 
   $("previewGap").textContent=$("gap").textContent;
   const windStatus=windMode==="auto" && !liveWindComponents()
-    ? "Calm estimate • live wind pending" : "";
+    ? t("liveWindPending") : "";
   $("previewWindStatus").textContent=windStatus;
   $("resultWindStatus").textContent=windStatus;
 
   if(elevationM!==0){
-    $("playAs").textContent=`Plays as ${toDisplay(effectiveTargetM).toFixed(0)} ${u} with ${toDisplay(elevationM)>0?"+":""}${toDisplay(elevationM).toFixed(0)} ${u} elevation`;
+    $("playAs").textContent=`${t("playsAs")} ${toDisplay(effectiveTargetM).toFixed(0)} ${u} ${t("withElevation")} ${toDisplay(elevationM)>0?"+":""}${toDisplay(elevationM).toFixed(0)} ${u} ${t("elevation")}`;
   }else{
     $("playAs").textContent="";
   }
 
   const lateralD=toDisplay(best.lateralM);
   $("side").textContent=Math.abs(lateralD)>=1
-    ? `Lateral movement: approx. ${Math.abs(lateralD).toFixed(0)} ${u} ${lateralD>0?"right":"left"}`
+    ? `${t("lateralMovement")} ${Math.abs(lateralD).toFixed(0)} ${u} ${t(lateralD>0?"right":"left")}`
     : "";
 
   $("rows").innerHTML=results.map(x=>{
@@ -435,7 +596,7 @@ function renderClubSettings(){
     <div class="settings-row">
       <strong>${x.n}</strong>
       <input data-i="${i}" type="number" min="20" max="400" step="1" value="${Math.round(toDisplay(x.c))}">
-      <span>${u} carry</span>
+      <span>${u} ${t("clubCarry")}</span>
     </div>`).join("");
 
   $("clubSettings").querySelectorAll("input").forEach(inp=>{
@@ -462,6 +623,7 @@ function changeUnit(newUnit){
 }
 
 function setWindMode(mode){
+  if(playMode==="competition"&&mode==="manual") return;
   windMode=mode;
   localStorage.setItem("gsc-windmode-v4",mode);
   setButtons();
@@ -471,30 +633,34 @@ function setWindMode(mode){
 
 async function requestLocationAndWeather(){
   const requestId=++locationRequestId;
-  $("windError").textContent="";
+  setMessage("windError","");
   if(!navigator.geolocation){
-    $("windError").textContent="Location is not supported by this browser.";
+    setMessage("windError","locationUnsupported");
     return;
   }
 
-  $("locationText").textContent="Requesting location…";
+  currentPlace=null;
+  setMessage("locationText","requestingLocation");
+  setMessage("weatherDir","loadingWind");
   $("locationAccuracy").textContent="";
   weather=null; calc();
 
   navigator.geolocation.getCurrentPosition(async pos=>{
     if(requestId!==locationRequestId) return;
     gps={lat:pos.coords.latitude,lon:pos.coords.longitude,accuracy:pos.coords.accuracy};
-    $("locationText").textContent="Finding place…";
+    setMessage("locationText","findingPlace");
     $("locationAccuracy").textContent=`GPS ±${Math.round(gps.accuracy)} m`;
     lookupPlace(gps,requestId);
     await fetchWeather();
   },err=>{
     if(requestId!==locationRequestId) return;
-    $("locationText").textContent="Location unavailable";
+    setMessage("locationText","locationUnavailable");
     $("locationAccuracy").textContent="";
     weather=null;
+    delete messageKeys.weatherWind;
     $("weatherWind").textContent="—"; calc();
-    $("windError").textContent="Allow location access in Safari/iPhone settings, then try again.";
+    setMessage("weatherDir","tapUseLocation");
+    setMessage("windError","allowLocation");
   },{
     enableHighAccuracy:true,
     timeout:12000,
@@ -509,20 +675,22 @@ async function lookupPlace(position,requestId){
     if(!res.ok) throw new Error("Place lookup failed");
     const data=await res.json();
     if(requestId!==locationRequestId) return;
-    const place=String(data.city||data.locality||"").trim();
-    const country=String(data.countryName||"").trim();
-    $("locationText").textContent=place ? [place,country].filter(Boolean).join(", ") : `${position.lat.toFixed(4)}, ${position.lon.toFixed(4)}`;
+    currentPlace={city:String(data.city||data.locality||"").trim(),country:String(data.countryName||"").trim(),countryCode:String(data.countryCode||"").trim(),lat:position.lat,lon:position.lon};
+    delete messageKeys.locationText;
+    formatPlace();
   }catch(e){
     if(requestId===locationRequestId){
-      $("locationText").textContent=`${position.lat.toFixed(4)}, ${position.lon.toFixed(4)}`;
+      currentPlace={city:"",country:"",countryCode:"",lat:position.lat,lon:position.lon};
+      delete messageKeys.locationText;
+      formatPlace();
     }
   }
 }
 
 async function fetchWeather(){
   if(!gps) return;
-  $("weatherWind").textContent="Loading wind…";
-  $("windError").textContent="";
+  setMessage("weatherWind","loadingWind");
+  setMessage("windError","");
 
   try{
     const url=`https://api.open-meteo.com/v1/forecast?latitude=${gps.lat}&longitude=${gps.lon}&current=wind_speed_10m,wind_direction_10m&wind_speed_unit=ms&timezone=auto`;
@@ -537,16 +705,16 @@ async function fetchWeather(){
       time:data.current.time
     };
 
-    $("weatherWind").textContent=`${degToCardinal(weather.fromDeg)} ${weather.speed.toFixed(1)} m/s`;
-    const windLabel=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°)`;
-    $("weatherDir").textContent=`${weather.speed<0.5?"Calm":windLabel} • ${String(weather.time||"now").replace("T"," ")}`;
+    delete messageKeys.weatherWind;
+    delete messageKeys.weatherDir;
+    renderWeather();
     calc();
   }catch(e){
     weather=null;
-    $("weatherWind").textContent="Wind unavailable";
-    $("weatherDir").textContent="Could not load current wind";
+    setMessage("weatherWind","windUnavailable");
+    setMessage("weatherDir","currentWindUnavailable");
     calc();
-    $("windError").textContent="Could not load live wind. Switch to Manual if needed.";
+    setMessage("windError","liveWindUnavailable");
   }
 }
 
@@ -561,7 +729,7 @@ function extractCompassHeading(event){
 }
 
 function orientationHandler(event){
-  if(document.hidden) return;
+  if(document.hidden||playMode==="competition") return;
   const h=extractCompassHeading(event);
   if(h===null) return;
   const now=Date.now();
@@ -569,23 +737,23 @@ function orientationHandler(event){
   lastCompassUpdate=now;
   shotHeading=norm360(h);
   $("shotHeading").textContent=`${Math.round(shotHeading)}° ${degToCardinal(shotHeading)}`;
-  $("compassStatus").textContent="Updating automatically while the app is open";
+  setMessage("compassStatus","directionUpdating");
   $("setDirectionBtn").classList.add("hidden");
   calc();
 }
 
 async function ensureCompass(){
-  $("windError").textContent="";
+  setMessage("windError","");
   try{
     if(typeof DeviceOrientationEvent==="undefined"){
-      $("windError").textContent="This device does not provide compass direction. Use Manual wind.";
+      setMessage("windError","compassMissing");
       return false;
     }
     if(typeof DeviceOrientationEvent!=="undefined" &&
        typeof DeviceOrientationEvent.requestPermission==="function"){
       const permission=await DeviceOrientationEvent.requestPermission();
       if(permission!=="granted"){
-        $("windError").textContent="Compass permission was not granted.";
+        setMessage("windError","compassDenied");
         return false;
       }
     }
@@ -597,24 +765,24 @@ async function ensureCompass(){
     }
     return true;
   }catch(e){
-    $("windError").textContent="Compass access is unavailable. Use Manual wind mode if needed.";
+    setMessage("windError","compassAccess");
     return false;
   }
 }
 
 async function setShotDirectionFromPhone(){
-  $("compassStatus").textContent="Waiting for live direction…";
+  setMessage("compassStatus","waitingCompass");
 
   const ok=await ensureCompass();
   if(!ok){
-    $("compassStatus").textContent="Compass unavailable";
+    setMessage("compassStatus","compassUnavailable");
     return;
   }
 
   setTimeout(()=>{
     if(shotHeading===null){
-      $("compassStatus").textContent="No compass reading received";
-      $("windError").textContent="Move the phone and allow Motion & Orientation access in Safari/iPhone settings.";
+      setMessage("compassStatus","noCompassReading");
+      setMessage("windError","compassHelp");
     }
   },3000);
 }
@@ -632,6 +800,10 @@ $("totalBtn").addEventListener("click",()=>{
 });
 $("autoBtn").addEventListener("click",()=>setWindMode("auto"));
 $("manualBtn").addEventListener("click",()=>setWindMode("manual"));
+$("competitionBtn").addEventListener("click",()=>setPlayingMode("competition"));
+$("practiceBtn").addEventListener("click",()=>setPlayingMode("practice"));
+$("langSv").addEventListener("click",()=>changeLanguage("sv"));
+$("langEn").addEventListener("click",()=>changeLanguage("en"));
 $("refreshWeather").addEventListener("click",requestLocationAndWeather);
 $("setDirectionBtn").addEventListener("click",setShotDirectionFromPhone);
 
@@ -655,6 +827,7 @@ $("resetBtn").addEventListener("click",()=>{
 
 const manualDial=$("manualDial");
 function setManualAngleFromPointer(clientX,clientY){
+  if(playMode==="competition") return;
   const rect=manualDial.getBoundingClientRect();
   const cx=rect.left+rect.width/2,cy=rect.top+rect.height/2;
   const dx=clientX-cx,dy=clientY-cy;
@@ -678,10 +851,10 @@ manualDial.addEventListener("pointermove",e=>{
 $("manualDir").addEventListener("input",updateManualDial);
 
 setButtons();
-updateElevationUI();
-updateManualDial();
-renderClubSettings();
-calc();
+setMessage("locationText","locationUnavailable");
+setMessage("weatherDir","tapUseLocation");
+setMessage("compassStatus","enableCompassHint");
+applyLanguage();
 // If the browser has retained sensor permission, start live updates on opening.
 // On iPhone, the button above requests permission in response to a tap when needed.
 if(typeof DeviceOrientationEvent!=="undefined"){
@@ -694,14 +867,14 @@ document.addEventListener("visibilitychange",()=>{
     shotHeading=null;
     lastCompassUpdate=0;
     $("shotHeading").textContent="—";
-    $("compassStatus").textContent="Aim the phone to update direction";
+    setMessage("compassStatus","aimPhone");
     $("setDirectionBtn").classList.remove("hidden");
     calc();
   }
 });
 
 if(windMode==="auto"){
-  $("windError").textContent="Tap Use my location to load live wind.";
+  setMessage("windError","tapLocation");
 }
 
 if("serviceWorker" in navigator){
@@ -711,24 +884,23 @@ if("serviceWorker" in navigator){
   navigator.serviceWorker.addEventListener("controllerchange",()=>{
     if(wasControlled && !reloadingForUpdate){
       reloadingForUpdate=true;
-      $("updateStatus").textContent="New version ready. Reloading…";
+      setMessage("updateStatus","updateReady");
       window.location.reload();
     }
   });
 
   async function checkForUpdates(){
-    $("updateStatus").textContent="Checking for updates…";
+    setMessage("updateStatus","checkingUpdates");
     try{
       const registration=serviceWorkerRegistration || await navigator.serviceWorker.getRegistration("./");
       if(!registration) throw new Error("Offline support is unavailable");
       serviceWorkerRegistration=registration;
       await registration.update();
       if(!reloadingForUpdate){
-        $("updateStatus").textContent=registration.installing
-          ? "New version downloading…" : "You have the latest available version.";
+        setMessage("updateStatus",registration.installing?"downloadingUpdate":"latestVersion");
       }
     }catch(e){
-      $("updateStatus").textContent="Could not check. Connect to the internet and try again.";
+      setMessage("updateStatus","updateCheckFailed");
     }
   }
 
@@ -737,11 +909,11 @@ if("serviceWorker" in navigator){
     try{
       serviceWorkerRegistration=await navigator.serviceWorker.register("./sw.js",{updateViaCache:"none"});
       serviceWorkerRegistration.addEventListener("updatefound",()=>{
-        if(wasControlled) $("updateStatus").textContent="New version downloading…";
+        if(wasControlled) setMessage("updateStatus","downloadingUpdate");
       });
       await serviceWorkerRegistration.update();
     }catch(e){
-      $("updateStatus").textContent="Offline support is unavailable.";
+      setMessage("updateStatus","offlineUnavailable");
     }
   });
   document.addEventListener("visibilitychange",()=>{
@@ -751,7 +923,7 @@ if("serviceWorker" in navigator){
   });
 }else{
   $("updateBtn").disabled=true;
-  $("updateStatus").textContent="Updates require a supported browser.";
+  setMessage("updateStatus","updatesUnsupported");
 }
 </script>
 </body>

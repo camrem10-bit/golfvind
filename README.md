@@ -1,10 +1,12 @@
-# Golf Shot Calculator v5
+# My Caddie - Golf Shot Calculator v5
 
 Created by Camilla Remstedt, 2026.
 
 ## What is included
 
 - iPhone layout based on the supplied Layout.pdf: Shot and compact recommendation side by side with aligned card edges and buttons, followed by slope compensation, wind, full result, club table and settings.
+- Swedish and English interface selected by flags at the top right; the choice is saved on the device, including calculated text and live status messages.
+- Competition and Practice buttons immediately below the two top cards. Competition mode shows only entered distance and forecast wind: club recommendation, slope, manual and relative wind calculations, and adjusted club distances are unavailable. The selected mode is saved. Event rules remain the player's responsibility (Rules of Golf 4.3).
 - Custom supplied green golf logo beside the title; page background #707970 with white header and footer text.
 - Carry or Total (including roll) for club selection; Meters or Yards for distances.
 - Slope Compensation - Uphill vs Downhill: -30 to +30 metres (approximately -33 to +33 yards); straight shots only.
@@ -13,7 +15,7 @@ Created by Camilla Remstedt, 2026.
 - Manual wind speed and direction as a fallback; adjustable custom carry distances.
 - Home Screen PWA with offline access to the interface and saved club distances.
 - SF Pro Medium (500) for ordinary text and number fields on Apple devices; wind panels use Semibold (600), with supporting wind text enlarged to 12 CSS px. The smallest text is 9 CSS px (approximately 6.75 pt), above the requested 6 pt floor.
-- Automatic reload after a new service worker takes over, plus a visible version number (5.14) and Check for updates button in Model.
+- Automatic reload after a new service worker takes over, plus a visible version number (5.17) and Check for updates button in Model.
 
 ## Use live wind on iPhone
 
