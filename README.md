@@ -5,8 +5,9 @@ Created by Camilla Remstedt, 2026.
 ## What is included
 
 - iPhone layout based on the supplied Layout.pdf: Shot and compact recommendation side by side, followed by elevation, wind, full result, club table and settings.
+- Custom supplied green golf logo beside the title; page background #6d766e.
 - Carry or Total (including roll) for club selection; Meters or Yards for distances.
-- Elevation to green: -10 to +10 metres; Straight or Fade.
+- Elevation to green: -30 to +30 metres (approximately -33 to +33 yards); straight shots only.
 - GPS wind from Open-Meteo and shot direction locked from the iPhone compass.
 - Manual wind speed and direction as a fallback; adjustable custom carry distances.
 - Home Screen PWA with offline access to the interface and saved club distances.
@@ -17,6 +18,6 @@ Open from your HTTPS GitHub Pages link, tap **Use my location** and allow locati
 
 ## Update your existing GitHub Pages repository
 
-Unzip the archive and upload all seven files from its root to your existing repository, replacing matching names. Keep Settings → Pages set to the same branch and root. The URL stays the same. Load the page while online after the update to cache v5, then reopen the Home Screen app if an older version appears.
+Unzip the archive and upload all eight files from its root to your existing repository, replacing matching names and adding logo-green.svg. Keep Settings → Pages set to the same branch and root. The URL stays the same. Load the page while online after the update to cache the new version, then reopen the Home Screen app if an older version appears.
 
 The interface works offline after first load. GPS weather requires a connection; the compass requires a compatible sensor and browser permission. Preferences and club distances stay in the device's local browser storage.

@@ -11,17 +11,18 @@
   <link rel="apple-touch-icon" href="icon-180.png">
   <title>Golf Shot Calculator</title>
   <style>
-    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#f4f8f3;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
+    :root{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;color:#1a271e;background:#6d766e;--green:#173b2d;--green2:#ecf9ef;--line:#d1dfd4;--muted:#63736a}
     *{box-sizing:border-box}
-    body{margin:0;min-height:100vh;background:linear-gradient(#f2f7f1,#fbfdfb);padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
+    body{margin:0;min-height:100vh;background:#6d766e;padding:env(safe-area-inset-top) 10px calc(16px + env(safe-area-inset-bottom))}
     main{max-width:560px;margin:auto}
-    header{padding:4px 0 7px}h1{font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap}.sub{margin:2px 0 0;color:var(--muted);font-size:clamp(10px,2.7vw,13px)}
+    header{padding:4px 0 7px}h1{display:flex;align-items:center;gap:6px;font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap}h1 img{width:38px;height:auto;flex:none}.sub{margin:2px 0 0;color:var(--muted);font-size:clamp(10px,2.7vw,13px)}
     .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;margin:9px 0;box-shadow:0 3px 10px #233e2710}
     .top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:stretch}
     .top-grid .card{margin:0;min-width:0;padding:9px}
     .section-title{font-size:16px;font-weight:800;margin-bottom:3px}
     label{display:block;font-size:11px;font-weight:700;margin:9px 0 5px}
     input[type=number]{width:100%;font-size:16px;padding:9px 10px;border:1px solid #ccd9ce;border-radius:11px;background:#fff;min-width:0}
+    #dist{color:#a32635;font-size:19px;font-weight:700}
     input[type=range]{width:100%;accent-color:var(--green);min-width:0}
     .seg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:5px}
     .seg button,.btn,.small-btn{border:1px solid #ccd9ce;background:#fff;border-radius:7px;padding:7px 4px;font-size:11px;font-weight:700;color:#26342c;min-width:0;touch-action:manipulation}
@@ -55,7 +56,6 @@
     .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:var(--muted);padding:9px 4px}
     .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
     .wind-section{padding-top:10px}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
-    .shot-shape{margin-top:9px;border-top:1px solid #e2eae3;padding-top:2px}
     summary{cursor:pointer}
     @media(max-width:350px){.top-grid{gap:6px}.top-grid .card{padding:7px}.seg button{font-size:10px}.preview-stat{font-size:10px}.elev-wrap{grid-template-columns:25px minmax(0,1fr) 25px 43px;gap:3px}}
     @media(min-width:700px){main{max-width:630px}.top-grid{gap:12px}.top-grid .card{padding:14px}.card{padding:16px}}
@@ -64,7 +64,7 @@
 <body>
 <main>
   <header>
-    <h1>⛳ Golf Shot Calculator</h1>
+    <h1><img src="./logo-green.svg" alt="" width="38" height="23">Golf Shot Calculator</h1>
     <p class="sub">Wind-adjusted club selection, carry and total distance</p>
   </header>
 
@@ -87,9 +87,9 @@
   </div>
   <section class="card">
     <label for="elev" style="margin-top:0">Elevation to green</label>
-    <div class="elev-wrap"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-10" max="10" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
+    <div class="elev-wrap"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-30" max="30" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
     <div class="muted" id="elevText" style="text-align:center;margin-top:4px">Level</div>
-    <div class="shot-shape"><label>Shot shape</label><div class="seg"><button id="straightBtn" class="active" type="button">Straight</button><button id="fadeBtn" type="button">Fade</button></div></div>
+    <div class="muted" id="elevRange" style="text-align:center">−30 m to +30 m</div>
     <div class="wind-section">
       <div class="section-title" style="border-top:1px solid var(--line);padding-top:9px">Wind</div>
       <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
@@ -166,7 +166,7 @@
       This is a practical estimate based on your baseline club distances. Live wind uses current
       10 m weather-model wind for your GPS position. Course-level wind can differ because of trees,
       terrain, buildings and gusts. Headwind has a greater effect than tailwind, crosswind mainly
-      affects direction, and fade is modelled as approximately 3% shorter carry in calm conditions.
+      affects direction. Club estimates assume a straight shot.
     </p>
   </section>
 
@@ -190,10 +190,9 @@ const cloneDefaults = () => JSON.parse(JSON.stringify(defaultClubsM));
 let clubsM = JSON.parse(localStorage.getItem("gsc-clubs-v4") || "null") || cloneDefaults();
 let unit = localStorage.getItem("gsc-unit-v4") || "m";
 let selectionMode = localStorage.getItem("gsc-selection-v4") || "carry";
-let shape = localStorage.getItem("gsc-shape-v4") || "Straight";
 let windMode = localStorage.getItem("gsc-windmode-v4") || "auto";
 
-let elevationM = clamp(Number(localStorage.getItem("gsc-elevation-v5")) || 0,-10,10);
+let elevationM = clamp(Number(localStorage.getItem("gsc-elevation-v5")) || 0,-30,30);
 let gps = null;
 let weather = null; // speed m/s, fromDeg
 let shotHeading = null;
@@ -215,8 +214,6 @@ function setButtons(){
   $("yardsBtn").classList.toggle("active",unit==="yd");
   $("carryBtn").classList.toggle("active",selectionMode==="carry");
   $("totalBtn").classList.toggle("active",selectionMode==="total");
-  $("straightBtn").classList.toggle("active",shape==="Straight");
-  $("fadeBtn").classList.toggle("active",shape==="Fade");
   $("autoBtn").classList.toggle("active",windMode==="auto");
   $("manualBtn").classList.toggle("active",windMode==="manual");
   $("autoWind").classList.toggle("hidden",windMode!=="auto");
@@ -230,6 +227,7 @@ function updateElevationUI(){
   $("elevValue").textContent = `${rounded>0?"+":""}${rounded} ${unitLabel()}`;
   $("elev").value = elevationM;
   $("elevText").textContent = elevationM>0 ? "Uphill" : elevationM<0 ? "Downhill" : "Level";
+  $("elevRange").textContent = `−${Math.round(toDisplay(30))} ${unitLabel()} to +${Math.round(toDisplay(30))} ${unitLabel()}`;
 }
 
 function directionDescriptionFromComponents(along,cross){
@@ -316,7 +314,6 @@ function calc(){
     else cf+=0.013*along;
 
     cf-=0.002*Math.abs(cross);
-    if(shape==="Fade") cf-=0.03;
 
     const carryM=Math.max(0,x.c*cf);
 
@@ -328,11 +325,7 @@ function calc(){
     const rollM=Math.max(0,x.r*rf);
     const totalM=carryM+rollM;
 
-    let lateralM=cross*(carryM/100)*0.85;
-    if(shape==="Fade"){
-      lateralM+=carryM*0.06;
-      if(cross>0) lateralM+=cross*(carryM/100)*0.25;
-    }
+    const lateralM=cross*(carryM/100)*0.85;
 
     const selectionDistanceM=selectionMode==="carry"?carryM:totalM;
     const diffM=selectionDistanceM-effectiveTargetM;
@@ -559,23 +552,16 @@ $("carryBtn").addEventListener("click",()=>{
 $("totalBtn").addEventListener("click",()=>{
   selectionMode="total";localStorage.setItem("gsc-selection-v4",selectionMode);setButtons();calc();
 });
-$("straightBtn").addEventListener("click",()=>{
-  shape="Straight";localStorage.setItem("gsc-shape-v4",shape);setButtons();calc();
-});
-$("fadeBtn").addEventListener("click",()=>{
-  shape="Fade";localStorage.setItem("gsc-shape-v4",shape);setButtons();calc();
-});
-
 $("autoBtn").addEventListener("click",()=>setWindMode("auto"));
 $("manualBtn").addEventListener("click",()=>setWindMode("manual"));
 $("refreshWeather").addEventListener("click",requestLocationAndWeather);
 $("setDirectionBtn").addEventListener("click",setShotDirectionFromPhone);
 
 $("elevMinus").addEventListener("click",()=>{
-  elevationM=clamp(elevationM-1,-10,10);$("elev").value=elevationM;updateElevationUI();calc();
+  elevationM=clamp(elevationM-1,-30,30);$("elev").value=elevationM;updateElevationUI();calc();
 });
 $("elevPlus").addEventListener("click",()=>{
-  elevationM=clamp(elevationM+1,-10,10);$("elev").value=elevationM;updateElevationUI();calc();
+  elevationM=clamp(elevationM+1,-30,30);$("elev").value=elevationM;updateElevationUI();calc();
 });
 $("elev").addEventListener("input",()=>{
   elevationM=Number($("elev").value);updateElevationUI();calc();
