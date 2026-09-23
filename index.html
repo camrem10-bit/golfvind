@@ -44,17 +44,14 @@
     .pill{border:1px solid #cbd5cf;background:#fff;border-radius:9px;padding:7px 2px;text-align:center;font-size:12px;font-weight:700;white-space:nowrap}
     .status-card{background:#eff9f1;border:1px solid #d2e7d6;border-radius:11px;padding:9px;margin-top:10px}
     .status-card strong{font-size:14px}.wind-big{font-size:22px;font-weight:800;margin:7px 0}
-    .current-wind-row{gap:4px}
-    .current-wind-row strong{font-size:clamp(12px,3.6vw,14px)}
-    .auto-wind-dial{width:clamp(72px,25vw,92px);aspect-ratio:1;flex:none;margin:0 auto;position:relative;border-radius:50%;border:1px solid #d3dcd6;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%)}
-    .auto-wind-dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:600;line-height:1}
-    .auto-wind-dial .mark.top{top:3px;left:50%;transform:translateX(-50%)}
-    .auto-wind-dial .mark.right{right:5px;top:50%;transform:translateY(-50%)}
-    .auto-wind-dial .mark.bottom{bottom:3px;left:50%;transform:translateX(-50%)}
-    .auto-wind-dial .mark.left{left:5px;top:50%;transform:translateY(-50%)}
-    .auto-dial-arrow{position:absolute;left:50%;top:50%;width:4px;height:30%;background:var(--green);border-radius:4px;transform-origin:50% 100%}
-    .auto-dial-arrow:before{content:"";position:absolute;left:50%;top:-6px;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--green)}
-    .auto-dial-hub{position:absolute;left:50%;top:50%;width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid var(--green);transform:translate(-50%,-50%)}
+    .current-wind-layout{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:10px;align-items:start}
+    .current-wind-info{min-width:0}
+    .current-wind-actions{display:flex;flex-direction:column;align-items:center;gap:12px}
+    .auto-wind-dial{width:clamp(94px,27vw,112px);height:auto;flex:none;display:block;color:#171e19}
+    .auto-wind-dial .cardinal-label{font-family:-apple-system,BlinkMacSystemFont,"SF Pro Text",sans-serif;font-size:15px;font-weight:600;fill:currentColor;text-anchor:middle}
+    .auto-wind-dial .cardinal-point,.auto-wind-dial .wind-needle{fill:currentColor}
+    .auto-wind-dial .needle-hub{fill:#fff;stroke:currentColor;stroke-width:4}
+    .auto-wind-dial .needle-centre{fill:currentColor}
     .dial-wrap{display:flex;justify-content:center;padding:6px 0}
     .dial{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%);border:1px solid #d3dcd6;touch-action:none;user-select:none}
     .dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:800}
@@ -113,11 +110,33 @@
       <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
       <div id="autoWind">
         <div class="status-card">
-          <div class="between current-wind-row"><strong>Current location</strong><div id="autoWindDial" class="auto-wind-dial" role="img" aria-label="Waiting for wind and shot direction"><span class="mark top" aria-hidden="true">TAIL</span><span class="mark right" aria-hidden="true">R</span><span class="mark bottom" aria-hidden="true">HEAD</span><span class="mark left" aria-hidden="true">L</span><span class="auto-dial-arrow hidden" id="autoWindArrow" aria-hidden="true"></span><span class="auto-dial-hub" aria-hidden="true"></span></div><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
-          <div class="muted" id="locationText">Location unavailable</div>
-          <div class="muted" id="locationAccuracy"></div>
-          <div class="wind-big" id="weatherWind">—</div>
-          <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
+          <div class="current-wind-layout">
+            <div class="current-wind-info">
+              <strong>Current location</strong>
+              <div class="muted" id="locationText">Location unavailable</div>
+              <div class="muted" id="locationAccuracy"></div>
+              <div class="wind-big" id="weatherWind">—</div>
+              <div class="muted" id="weatherDir">Tap “Use my location” to load wind</div>
+            </div>
+            <div class="current-wind-actions">
+              <button class="small-btn" id="refreshWeather" type="button">Refresh</button>
+              <svg id="autoWindDial" class="auto-wind-dial" viewBox="0 0 160 160" role="img" aria-label="Waiting for wind and shot direction" xmlns="http://www.w3.org/2000/svg">
+                <text class="cardinal-label" x="80" y="16">TAIL</text>
+                <path class="cardinal-point" d="M80 26 74 42 86 42Z"/>
+                <text class="cardinal-label" x="149" y="85">R</text>
+                <path class="cardinal-point" d="M134 80 117 74 117 86Z"/>
+                <text class="cardinal-label" x="80" y="155">HEAD</text>
+                <path class="cardinal-point" d="M80 134 74 118 86 118Z"/>
+                <text class="cardinal-label" x="11" y="85">L</text>
+                <path class="cardinal-point" d="M26 80 43 74 43 86Z"/>
+                <g id="autoWindArrow" class="hidden">
+                  <path class="wind-needle" d="M80 45 91 81 80 90 69 81Z"/>
+                </g>
+                <circle class="needle-hub" cx="80" cy="80" r="9"/>
+                <circle class="needle-centre" cx="80" cy="80" r="3"/>
+              </svg>
+            </div>
+          </div>
         </div>
         <label>Shot direction</label>
         <div class="muted">Point the top of your iPhone towards the target. Direction updates as you turn.</div>
@@ -188,7 +207,7 @@
       affects direction. Club estimates assume a straight shot.
     </p>
     <div class="between" style="margin-top:12px">
-      <span class="muted">Version 5.11</span>
+      <span class="muted">Version 5.13</span>
       <button class="small-btn" id="updateBtn" type="button">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
@@ -335,7 +354,7 @@ function updateAutoWindDial(){
     return;
   }
   const angle=norm360(Math.atan2(comps.cross,comps.along)*180/Math.PI);
-  arrow.style.transform=`translate(-50%,-100%) rotate(${angle}deg)`;
+  arrow.setAttribute("transform",`rotate(${angle} 80 80)`);
   arrow.classList.remove("hidden");
   dial.setAttribute("aria-label",directionDescriptionFromComponents(comps.along,comps.cross));
 }
