@@ -15,8 +15,8 @@ Created by Camilla Remstedt, 2026.
 - Manual wind speed and direction as a fallback; adjustable custom carry distances.
 - Home Screen PWA with offline access to the interface and saved club distances.
 - SF Pro Medium (500) for ordinary text and number fields on Apple devices; wind panels use Semibold (600), with supporting wind text enlarged to 12 CSS px. The smallest text is 9 CSS px (approximately 6.75 pt), above the requested 6 pt floor.
-- Automatic reload after a new service worker takes over, plus a visible version number (5.22) and Check for updates button in Model.
-- Driver, 3W, 7W, 5H, irons and full and half wedge shots are prefilled using the supplied carry distances. Approximate roll is prefilled for woods, hybrid and wedges; saved nonzero roll and carry values are preserved. Carry and roll can be edited in two columns. Woods and hybrids have a pale blue tint, irons pale green, and degree-marked wedges pale sand. Clearing website data restores the prefilled values.
+- Automatic reload after a new service worker takes over, plus a visible version number (5.25) and Check for updates button in Model. The top Club card has a stronger dark red recommendation and distance display, and includes slope and lateral wind information.
+- D (Driver), 3W, 7W, 5H, irons and full and half wedge shots are prefilled using the supplied carry distances. Approximate roll is prefilled for woods, hybrid and wedges; saved nonzero roll and carry values are preserved. Carry and roll can be edited in two columns. Woods and hybrids have a pale blue tint, irons pale green, and degree-marked wedges pale sand. Clearing website data restores the prefilled values.
 
 ## Use live wind on iPhone
 
