@@ -4,16 +4,16 @@ Created by Camilla Remstedt, 2026.
 
 ## What is included
 
-- iPhone layout based on the supplied Layout.pdf: Shot and compact recommendation side by side, followed by elevation, wind, full result, club table and settings.
+- iPhone layout based on the supplied Layout.pdf: Shot and compact recommendation side by side with aligned card edges and buttons, followed by slope compensation, wind, full result, club table and settings.
 - Custom supplied green golf logo beside the title; page background #707970 with white header and footer text.
 - Carry or Total (including roll) for club selection; Meters or Yards for distances.
-- Elevation to green: -30 to +30 metres (approximately -33 to +33 yards); straight shots only.
+- Slope Compensation - Uphill vs Downhill: -30 to +30 metres (approximately -33 to +33 yards); straight shots only.
 - GPS wind from Open-Meteo, locality name from BigDataCloud, and live shot direction from the iPhone compass.
-- Small wind-source direction arrow between Current location and Refresh; it points towards the compass direction the wind comes from and disappears if wind is calm or unavailable.
+- A compact wind dial with TAIL, R, HEAD and L between Current location and Refresh; its arrow shows wind movement relative to the live shot direction and disappears if wind is calm or the heading is unavailable.
 - Manual wind speed and direction as a fallback; adjustable custom carry distances.
 - Home Screen PWA with offline access to the interface and saved club distances.
-- SF Pro Medium (500) for ordinary text and number fields on Apple devices; stronger weights remain for headings and controls. The smallest text is 9 CSS px (approximately 6.75 pt), above the requested 6 pt floor.
-- Automatic reload after a new service worker takes over, plus a visible version number (5.9) and Check for updates button in Model.
+- SF Pro Medium (500) for ordinary text and number fields on Apple devices; wind panels use Semibold (600), with supporting wind text enlarged to 12 CSS px. The smallest text is 9 CSS px (approximately 6.75 pt), above the requested 6 pt floor.
+- Automatic reload after a new service worker takes over, plus a visible version number (5.11) and Check for updates button in Model.
 
 ## Use live wind on iPhone
 

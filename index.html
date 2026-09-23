@@ -18,7 +18,8 @@
     header{padding:4px 0 7px}h1{display:flex;align-items:center;gap:6px;font-size:clamp(19px,5.2vw,27px);margin:0;letter-spacing:-.65px;white-space:nowrap;color:#fff}h1 img{width:38px;height:auto;flex:none}.sub{margin:2px 0 0;color:#fff;font-size:clamp(10px,2.7vw,13px)}
     .card{background:#fff;border:1px solid var(--line);border-radius:17px;padding:12px;margin:9px 0;box-shadow:0 3px 10px #233e2710}
     .top-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:8px;align-items:stretch}
-    .top-grid .card{margin:0;min-width:0;padding:9px}
+    .top-grid .card{margin:0;min-width:0;padding:9px;height:100%;display:flex;flex-direction:column}
+    .top-grid .card>.seg:last-child{margin-top:auto}
     .section-title{font-size:16px;font-weight:800;margin-bottom:3px}
     label{display:block;font-size:11px;font-weight:700;margin:9px 0 5px}
     input[type=number]{width:100%;font-family:inherit;font-weight:500;font-size:16px;padding:9px 10px;border:1px solid #ccd9ce;border-radius:11px;background:#fff;min-width:0}
@@ -35,13 +36,25 @@
     .preview .big{font-size:clamp(36px,10vw,53px);line-height:1}
     .preview-stat{font-size:clamp(10px,2.8vw,14px);line-height:1.3;text-align:right;white-space:nowrap}
     .preview-gap{font-size:11px;margin-top:5px}
+    .top-grid .preview .inline-unit{margin-top:auto}
+    .top-grid .preview>.seg:last-child{margin-top:0}
     .inline-unit{margin-top:10px}
     .elev-wrap{display:grid;grid-template-columns:27px minmax(0,1fr) 27px 48px;gap:5px;align-items:center}
     .circle-btn{width:27px;height:27px;border-radius:50%;border:1px solid #cbd5cf;background:#fff;font-size:19px;line-height:1}
     .pill{border:1px solid #cbd5cf;background:#fff;border-radius:9px;padding:7px 2px;text-align:center;font-size:12px;font-weight:700;white-space:nowrap}
     .status-card{background:#eff9f1;border:1px solid #d2e7d6;border-radius:11px;padding:9px;margin-top:10px}
     .status-card strong{font-size:14px}.wind-big{font-size:22px;font-weight:800;margin:7px 0}
-    .wind-source-arrow{width:28px;height:28px;flex:none;margin:0 auto;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:50%;background:#fff;color:var(--green);font-size:18px;font-weight:700;line-height:1}
+    .current-wind-row{gap:4px}
+    .current-wind-row strong{font-size:clamp(12px,3.6vw,14px)}
+    .auto-wind-dial{width:clamp(72px,25vw,92px);aspect-ratio:1;flex:none;margin:0 auto;position:relative;border-radius:50%;border:1px solid #d3dcd6;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%)}
+    .auto-wind-dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:600;line-height:1}
+    .auto-wind-dial .mark.top{top:3px;left:50%;transform:translateX(-50%)}
+    .auto-wind-dial .mark.right{right:5px;top:50%;transform:translateY(-50%)}
+    .auto-wind-dial .mark.bottom{bottom:3px;left:50%;transform:translateX(-50%)}
+    .auto-wind-dial .mark.left{left:5px;top:50%;transform:translateY(-50%)}
+    .auto-dial-arrow{position:absolute;left:50%;top:50%;width:4px;height:30%;background:var(--green);border-radius:4px;transform-origin:50% 100%}
+    .auto-dial-arrow:before{content:"";position:absolute;left:50%;top:-6px;transform:translateX(-50%);border-left:6px solid transparent;border-right:6px solid transparent;border-bottom:10px solid var(--green)}
+    .auto-dial-hub{position:absolute;left:50%;top:50%;width:11px;height:11px;border-radius:50%;background:#fff;border:3px solid var(--green);transform:translate(-50%,-50%)}
     .dial-wrap{display:flex;justify-content:center;padding:6px 0}
     .dial{width:132px;height:132px;border-radius:50%;position:relative;background:radial-gradient(circle,#fff 0 58%,#eef4ef 59%);border:1px solid #d3dcd6;touch-action:none;user-select:none}
     .dial .mark{position:absolute;font-size:9px;color:#65716a;font-weight:800}
@@ -56,7 +69,11 @@
     .settings-row{display:grid;grid-template-columns:44px 1fr 57px;gap:8px;align-items:center;margin:8px 0}.settings-row input{padding:10px;font-size:16px}
     .footer-note{font-size:11px;line-height:1.45;color:#707a74;margin:9px 0 0}.creator-footer{text-align:center;font-size:11px;color:#fff;padding:9px 4px}
     .hidden{display:none!important}.error{color:#993333;font-size:11px;margin-top:7px}.shot-heading{font-size:22px;font-weight:800;white-space:nowrap}.compass-btn{width:100%;margin-top:8px;min-height:35px}
-    .wind-section{padding-top:10px}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
+    .wind-section{padding-top:10px;font-weight:600}.wind-section .seg button{min-height:33px}.wind-section .status-card .small-btn{padding:6px 10px}
+    .wind-section .muted,.wind-section .component-text,.wind-section label,.wind-section .error{font-size:12px;font-weight:600}
+    .wind-section .seg button,.wind-section .small-btn,.wind-section input{font-weight:600}
+    .wind-section .dial .mark{font-size:10px;font-weight:600}
+    .wind-section .status-card strong,.wind-section .wind-big,.wind-section .shot-heading,.wind-section .direction-text{font-weight:600}
     summary{cursor:pointer}
     @media(max-width:350px){.top-grid{gap:6px}.top-grid .card{padding:7px}.seg button{font-size:10px}.preview-stat{font-size:10px}.elev-wrap{grid-template-columns:25px minmax(0,1fr) 25px 43px;gap:3px}}
     @media(min-width:700px){main{max-width:630px}.top-grid{gap:12px}.top-grid .card{padding:14px}.card{padding:16px}}
@@ -87,7 +104,7 @@
     </section>
   </div>
   <section class="card">
-    <label for="elev" style="margin-top:0">Elevation to green</label>
+    <label for="elev" style="margin-top:0">Slope Compensation - Uphill vs Downhill</label>
     <div class="elev-wrap"><button class="circle-btn" id="elevMinus" type="button" aria-label="Decrease elevation">−</button><input id="elev" type="range" min="-30" max="30" step="1" value="0" aria-label="Elevation in metres"><button class="circle-btn" id="elevPlus" type="button" aria-label="Increase elevation">+</button><div class="pill" id="elevValue">0 m</div></div>
     <div class="muted" id="elevText" style="text-align:center;margin-top:4px">Level</div>
     <div class="muted" id="elevRange" style="text-align:center">−30 m to +30 m</div>
@@ -96,7 +113,7 @@
       <div class="seg"><button id="autoBtn" class="active" type="button">Use my location</button><button id="manualBtn" type="button">Manual wind</button></div>
       <div id="autoWind">
         <div class="status-card">
-          <div class="between"><strong>Current location</strong><span id="windSourceArrow" class="wind-source-arrow hidden" role="img" aria-label="Wind direction not loaded" title="Direction wind comes from">↑</span><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
+          <div class="between current-wind-row"><strong>Current location</strong><div id="autoWindDial" class="auto-wind-dial" role="img" aria-label="Waiting for wind and shot direction"><span class="mark top" aria-hidden="true">TAIL</span><span class="mark right" aria-hidden="true">R</span><span class="mark bottom" aria-hidden="true">HEAD</span><span class="mark left" aria-hidden="true">L</span><span class="auto-dial-arrow hidden" id="autoWindArrow" aria-hidden="true"></span><span class="auto-dial-hub" aria-hidden="true"></span></div><button class="small-btn" id="refreshWeather" type="button">Refresh</button></div>
           <div class="muted" id="locationText">Location unavailable</div>
           <div class="muted" id="locationAccuracy"></div>
           <div class="wind-big" id="weatherWind">—</div>
@@ -171,7 +188,7 @@
       affects direction. Club estimates assume a straight shot.
     </p>
     <div class="between" style="margin-top:12px">
-      <span class="muted">Version 5.9</span>
+      <span class="muted">Version 5.11</span>
       <button class="small-btn" id="updateBtn" type="button">Check for updates</button>
     </div>
     <div class="muted" id="updateStatus" role="status" aria-live="polite"></div>
@@ -309,6 +326,20 @@ function updateRelativeWindText(){
     `${longLabel} component: ${Math.abs(along).toFixed(1)} m/s • Crosswind: ${Math.abs(cross).toFixed(1)} m/s ${crossLabel}`;
 }
 
+function updateAutoWindDial(){
+  const dial=$("autoWindDial"), arrow=$("autoWindArrow");
+  const comps=windMode==="auto" && weather && weather.speed>=0.5 ? liveWindComponents() : null;
+  if(!comps){
+    arrow.classList.add("hidden");
+    dial.setAttribute("aria-label","Waiting for wind and shot direction");
+    return;
+  }
+  const angle=norm360(Math.atan2(comps.cross,comps.along)*180/Math.PI);
+  arrow.style.transform=`translate(-50%,-100%) rotate(${angle}deg)`;
+  arrow.classList.remove("hidden");
+  dial.setAttribute("aria-label",directionDescriptionFromComponents(comps.along,comps.cross));
+}
+
 function calc(){
   const targetDisplay=Math.max(1,Number($("dist").value)||135);
   const targetM=fromDisplay(targetDisplay);
@@ -383,6 +414,7 @@ function calc(){
   }).join("");
 
   updateRelativeWindText();
+  updateAutoWindDial();
 }
 
 function renderClubSettings(){
@@ -435,7 +467,6 @@ async function requestLocationAndWeather(){
 
   $("locationText").textContent="Requesting location…";
   $("locationAccuracy").textContent="";
-  $("windSourceArrow").classList.add("hidden");
   weather=null; calc();
 
   navigator.geolocation.getCurrentPosition(async pos=>{
@@ -449,7 +480,7 @@ async function requestLocationAndWeather(){
     if(requestId!==locationRequestId) return;
     $("locationText").textContent="Location unavailable";
     $("locationAccuracy").textContent="";
-    $("windSourceArrow").classList.add("hidden");
+    weather=null;
     $("weatherWind").textContent="—"; calc();
     $("windError").textContent="Allow location access in Safari/iPhone settings, then try again.";
   },{
@@ -479,7 +510,6 @@ async function lookupPlace(position,requestId){
 async function fetchWeather(){
   if(!gps) return;
   $("weatherWind").textContent="Loading wind…";
-  $("windSourceArrow").classList.add("hidden");
   $("windError").textContent="";
 
   try{
@@ -498,19 +528,11 @@ async function fetchWeather(){
     $("weatherWind").textContent=`${degToCardinal(weather.fromDeg)} ${weather.speed.toFixed(1)} m/s`;
     const windLabel=`Wind from ${degToCardinal(weather.fromDeg)} (${Math.round(weather.fromDeg)}°)`;
     $("weatherDir").textContent=`${weather.speed<0.5?"Calm":windLabel} • ${String(weather.time||"now").replace("T"," ")}`;
-    if(weather.speed>=0.5){
-      const arrow=$("windSourceArrow");
-      arrow.style.transform=`rotate(${norm360(weather.fromDeg)}deg)`;
-      arrow.setAttribute("aria-label",windLabel);
-      arrow.title=windLabel;
-      arrow.classList.remove("hidden");
-    }
     calc();
   }catch(e){
     weather=null;
     $("weatherWind").textContent="Wind unavailable";
     $("weatherDir").textContent="Could not load current wind";
-    $("windSourceArrow").classList.add("hidden");
     calc();
     $("windError").textContent="Could not load live wind. Switch to Manual if needed.";
   }
